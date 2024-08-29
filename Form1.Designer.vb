@@ -43,10 +43,14 @@ Partial Class MainForm
         Me.EarthquakeSimulationVisualizerGroupBox = New System.Windows.Forms.GroupBox()
         Me.YAxisVisualizationPanel = New System.Windows.Forms.Panel()
         Me.XAxisVisualizationPanel = New System.Windows.Forms.Panel()
+        Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.EarthQuakeSelectionGroupBox = New System.Windows.Forms.GroupBox()
         Me.EarthquakeSelectionDGV = New System.Windows.Forms.DataGridView()
         Me.EarthquakeNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SinusoidalTabPage = New System.Windows.Forms.TabPage()
+        Me.bgWorkerX = New System.ComponentModel.BackgroundWorker()
+        Me.TextBox2 = New System.Windows.Forms.TextBox()
+        Me.bgWorkerY = New System.ComponentModel.BackgroundWorker()
         Me.MainPanel.SuspendLayout()
         Me.GUITabControl.SuspendLayout()
         Me.InitializationTabPage.SuspendLayout()
@@ -54,6 +58,7 @@ Partial Class MainForm
         Me.EarthquakeTabPage.SuspendLayout()
         Me.EarthquakeSimulationControlsGroupBox.SuspendLayout()
         Me.EarthquakeSimulationVisualizerGroupBox.SuspendLayout()
+        Me.XAxisVisualizationPanel.SuspendLayout()
         Me.EarthQuakeSelectionGroupBox.SuspendLayout()
         CType(Me.EarthquakeSelectionDGV, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -261,10 +266,22 @@ Partial Class MainForm
         '
         'XAxisVisualizationPanel
         '
+        Me.XAxisVisualizationPanel.Controls.Add(Me.TextBox2)
+        Me.XAxisVisualizationPanel.Controls.Add(Me.TextBox1)
         Me.XAxisVisualizationPanel.Location = New System.Drawing.Point(6, 21)
         Me.XAxisVisualizationPanel.Name = "XAxisVisualizationPanel"
         Me.XAxisVisualizationPanel.Size = New System.Drawing.Size(1291, 323)
         Me.XAxisVisualizationPanel.TabIndex = 0
+        '
+        'TextBox1
+        '
+        Me.TextBox1.Location = New System.Drawing.Point(97, 39)
+        Me.TextBox1.Margin = New System.Windows.Forms.Padding(4)
+        Me.TextBox1.Multiline = True
+        Me.TextBox1.Name = "TextBox1"
+        Me.TextBox1.ReadOnly = True
+        Me.TextBox1.Size = New System.Drawing.Size(301, 225)
+        Me.TextBox1.TabIndex = 4
         '
         'EarthQuakeSelectionGroupBox
         '
@@ -307,6 +324,24 @@ Partial Class MainForm
         Me.SinusoidalTabPage.Text = "(3) Sinusoidal Wave Simulation"
         Me.SinusoidalTabPage.UseVisualStyleBackColor = True
         '
+        'bgWorkerX
+        '
+        Me.bgWorkerX.WorkerSupportsCancellation = True
+        '
+        'TextBox2
+        '
+        Me.TextBox2.Location = New System.Drawing.Point(406, 39)
+        Me.TextBox2.Margin = New System.Windows.Forms.Padding(4)
+        Me.TextBox2.Multiline = True
+        Me.TextBox2.Name = "TextBox2"
+        Me.TextBox2.ReadOnly = True
+        Me.TextBox2.Size = New System.Drawing.Size(301, 225)
+        Me.TextBox2.TabIndex = 5
+        '
+        'bgWorkerY
+        '
+        Me.bgWorkerY.WorkerSupportsCancellation = True
+        '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -325,6 +360,8 @@ Partial Class MainForm
         Me.EarthquakeTabPage.ResumeLayout(False)
         Me.EarthquakeSimulationControlsGroupBox.ResumeLayout(False)
         Me.EarthquakeSimulationVisualizerGroupBox.ResumeLayout(False)
+        Me.XAxisVisualizationPanel.ResumeLayout(False)
+        Me.XAxisVisualizationPanel.PerformLayout()
         Me.EarthQuakeSelectionGroupBox.ResumeLayout(False)
         CType(Me.EarthquakeSelectionDGV, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
@@ -355,4 +392,8 @@ Partial Class MainForm
     Private WithEvents EarthquakeSelectionDGV As DataGridView
     Private WithEvents EarthquakeNameColumn As DataGridViewTextBoxColumn
     Private WithEvents SinusoidalTabPage As TabPage
+    Friend WithEvents bgWorkerX As System.ComponentModel.BackgroundWorker
+    Friend WithEvents TextBox1 As TextBox
+    Friend WithEvents TextBox2 As TextBox
+    Friend WithEvents bgWorkerY As System.ComponentModel.BackgroundWorker
 End Class
