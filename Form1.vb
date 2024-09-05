@@ -361,8 +361,8 @@ Public Class MainForm
 
                 ' Check if the line has at least 3 parts
                 If parts.Length >= 3 Then
-                    ' Extract the middle value (F) and subtract 200
-                    Dim xValue As Double = Double.Parse(parts(1)) - 200
+                    ' Extract the middle value (F) and subtract 360
+                    Dim xValue As Double = Double.Parse(parts(1)) - 360
 
                     ' Add the calculated value to the chart
                     series.Points.AddY(xValue)
