@@ -22,6 +22,12 @@ Partial Class MainForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim ChartArea6 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
+        Dim Legend6 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
+        Dim Series6 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
+        Dim ChartArea5 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
+        Dim Legend5 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
+        Dim Series5 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
         Me.MainPanel = New System.Windows.Forms.Panel()
         Me.TitleLabel = New System.Windows.Forms.Label()
         Me.GUITabControl = New System.Windows.Forms.TabControl()
@@ -42,6 +48,7 @@ Partial Class MainForm
         Me.XSimulationButton = New System.Windows.Forms.Button()
         Me.EarthquakeSimulationVisualizerGroupBox = New System.Windows.Forms.GroupBox()
         Me.YAxisVisualizationPanel = New System.Windows.Forms.Panel()
+        Me.TextBox2 = New System.Windows.Forms.TextBox()
         Me.XAxisVisualizationPanel = New System.Windows.Forms.Panel()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.EarthQuakeSelectionGroupBox = New System.Windows.Forms.GroupBox()
@@ -49,8 +56,9 @@ Partial Class MainForm
         Me.EarthquakeNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SinusoidalTabPage = New System.Windows.Forms.TabPage()
         Me.bgWorkerX = New System.ComponentModel.BackgroundWorker()
-        Me.TextBox2 = New System.Windows.Forms.TextBox()
         Me.bgWorkerY = New System.ComponentModel.BackgroundWorker()
+        Me.XVisualizationChart = New System.Windows.Forms.DataVisualization.Charting.Chart()
+        Me.YVisualizationChart = New System.Windows.Forms.DataVisualization.Charting.Chart()
         Me.MainPanel.SuspendLayout()
         Me.GUITabControl.SuspendLayout()
         Me.InitializationTabPage.SuspendLayout()
@@ -58,9 +66,12 @@ Partial Class MainForm
         Me.EarthquakeTabPage.SuspendLayout()
         Me.EarthquakeSimulationControlsGroupBox.SuspendLayout()
         Me.EarthquakeSimulationVisualizerGroupBox.SuspendLayout()
+        Me.YAxisVisualizationPanel.SuspendLayout()
         Me.XAxisVisualizationPanel.SuspendLayout()
         Me.EarthQuakeSelectionGroupBox.SuspendLayout()
         CType(Me.EarthquakeSelectionDGV, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.XVisualizationChart, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.YVisualizationChart, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MainPanel
@@ -259,15 +270,27 @@ Partial Class MainForm
         '
         'YAxisVisualizationPanel
         '
+        Me.YAxisVisualizationPanel.Controls.Add(Me.TextBox2)
+        Me.YAxisVisualizationPanel.Controls.Add(Me.YVisualizationChart)
         Me.YAxisVisualizationPanel.Location = New System.Drawing.Point(6, 350)
         Me.YAxisVisualizationPanel.Name = "YAxisVisualizationPanel"
         Me.YAxisVisualizationPanel.Size = New System.Drawing.Size(1291, 323)
         Me.YAxisVisualizationPanel.TabIndex = 1
         '
+        'TextBox2
+        '
+        Me.TextBox2.Location = New System.Drawing.Point(1126, 32)
+        Me.TextBox2.Margin = New System.Windows.Forms.Padding(4)
+        Me.TextBox2.Multiline = True
+        Me.TextBox2.Name = "TextBox2"
+        Me.TextBox2.ReadOnly = True
+        Me.TextBox2.Size = New System.Drawing.Size(161, 287)
+        Me.TextBox2.TabIndex = 5
+        '
         'XAxisVisualizationPanel
         '
-        Me.XAxisVisualizationPanel.Controls.Add(Me.TextBox2)
         Me.XAxisVisualizationPanel.Controls.Add(Me.TextBox1)
+        Me.XAxisVisualizationPanel.Controls.Add(Me.XVisualizationChart)
         Me.XAxisVisualizationPanel.Location = New System.Drawing.Point(6, 21)
         Me.XAxisVisualizationPanel.Name = "XAxisVisualizationPanel"
         Me.XAxisVisualizationPanel.Size = New System.Drawing.Size(1291, 323)
@@ -275,12 +298,12 @@ Partial Class MainForm
         '
         'TextBox1
         '
-        Me.TextBox1.Location = New System.Drawing.Point(97, 39)
+        Me.TextBox1.Location = New System.Drawing.Point(1126, 32)
         Me.TextBox1.Margin = New System.Windows.Forms.Padding(4)
         Me.TextBox1.Multiline = True
         Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.ReadOnly = True
-        Me.TextBox1.Size = New System.Drawing.Size(301, 225)
+        Me.TextBox1.Size = New System.Drawing.Size(161, 287)
         Me.TextBox1.TabIndex = 4
         '
         'EarthQuakeSelectionGroupBox
@@ -328,19 +351,43 @@ Partial Class MainForm
         '
         Me.bgWorkerX.WorkerSupportsCancellation = True
         '
-        'TextBox2
-        '
-        Me.TextBox2.Location = New System.Drawing.Point(406, 39)
-        Me.TextBox2.Margin = New System.Windows.Forms.Padding(4)
-        Me.TextBox2.Multiline = True
-        Me.TextBox2.Name = "TextBox2"
-        Me.TextBox2.ReadOnly = True
-        Me.TextBox2.Size = New System.Drawing.Size(301, 225)
-        Me.TextBox2.TabIndex = 5
-        '
         'bgWorkerY
         '
         Me.bgWorkerY.WorkerSupportsCancellation = True
+        '
+        'XVisualizationChart
+        '
+        ChartArea6.Name = "ChartArea1"
+        Me.XVisualizationChart.ChartAreas.Add(ChartArea6)
+        Me.XVisualizationChart.Dock = System.Windows.Forms.DockStyle.Fill
+        Legend6.Name = "Legend1"
+        Me.XVisualizationChart.Legends.Add(Legend6)
+        Me.XVisualizationChart.Location = New System.Drawing.Point(0, 0)
+        Me.XVisualizationChart.Name = "XVisualizationChart"
+        Series6.ChartArea = "ChartArea1"
+        Series6.Legend = "Legend1"
+        Series6.Name = "Series1"
+        Me.XVisualizationChart.Series.Add(Series6)
+        Me.XVisualizationChart.Size = New System.Drawing.Size(1291, 323)
+        Me.XVisualizationChart.TabIndex = 5
+        Me.XVisualizationChart.Text = "Chart1"
+        '
+        'YVisualizationChart
+        '
+        ChartArea5.Name = "ChartArea1"
+        Me.YVisualizationChart.ChartAreas.Add(ChartArea5)
+        Me.YVisualizationChart.Dock = System.Windows.Forms.DockStyle.Fill
+        Legend5.Name = "Legend1"
+        Me.YVisualizationChart.Legends.Add(Legend5)
+        Me.YVisualizationChart.Location = New System.Drawing.Point(0, 0)
+        Me.YVisualizationChart.Name = "YVisualizationChart"
+        Series5.ChartArea = "ChartArea1"
+        Series5.Legend = "Legend1"
+        Series5.Name = "Series1"
+        Me.YVisualizationChart.Series.Add(Series5)
+        Me.YVisualizationChart.Size = New System.Drawing.Size(1291, 323)
+        Me.YVisualizationChart.TabIndex = 6
+        Me.YVisualizationChart.Text = "Chart1"
         '
         'MainForm
         '
@@ -360,10 +407,14 @@ Partial Class MainForm
         Me.EarthquakeTabPage.ResumeLayout(False)
         Me.EarthquakeSimulationControlsGroupBox.ResumeLayout(False)
         Me.EarthquakeSimulationVisualizerGroupBox.ResumeLayout(False)
+        Me.YAxisVisualizationPanel.ResumeLayout(False)
+        Me.YAxisVisualizationPanel.PerformLayout()
         Me.XAxisVisualizationPanel.ResumeLayout(False)
         Me.XAxisVisualizationPanel.PerformLayout()
         Me.EarthQuakeSelectionGroupBox.ResumeLayout(False)
         CType(Me.EarthquakeSelectionDGV, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.XVisualizationChart, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.YVisualizationChart, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -396,4 +447,6 @@ Partial Class MainForm
     Friend WithEvents TextBox1 As TextBox
     Friend WithEvents TextBox2 As TextBox
     Friend WithEvents bgWorkerY As System.ComponentModel.BackgroundWorker
+    Friend WithEvents XVisualizationChart As DataVisualization.Charting.Chart
+    Friend WithEvents YVisualizationChart As DataVisualization.Charting.Chart
 End Class

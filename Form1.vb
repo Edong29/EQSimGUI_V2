@@ -1,6 +1,7 @@
 ﻿Imports System.ComponentModel
 Imports System.IO
 Imports System.IO.Ports
+Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Class MainForm
 #Region "Properties"
@@ -28,7 +29,7 @@ Public Class MainForm
             Try
                 With XAxisSerialPort
                     .PortName = XAxisConnectionComboBox.SelectedItem.ToString()
-                    .BaudRate = 19200
+                    .BaudRate = 115200
                     .DataBits = 8
                     .Parity = Parity.None
                     .StopBits = StopBits.One
@@ -41,6 +42,7 @@ Public Class MainForm
                 'XAxisSerialPort.BaudRate = 9600  ' Set the appropriate baud rate
                 'XAxisSerialPort.Open()
                 IsConnectedToXAxisCOM = True
+                XAxisSerialPort.WriteLine("$100 = 29.78")
                 MessageBox.Show("Connected to Arduino 1 (X axis) on " & XAxisSerialPort.PortName)
             Catch ex As Exception
                 MessageBox.Show("Failed to connect to Arduino 1: " & ex.Message)
@@ -52,7 +54,7 @@ Public Class MainForm
             Try
                 With YAxisSerialPort
                     .PortName = YAxisConnectionComboBox.SelectedItem.ToString()
-                    .BaudRate = 19200
+                    .BaudRate = 115200
                     .DataBits = 8
                     .Parity = Parity.None
                     .StopBits = StopBits.One
@@ -65,6 +67,8 @@ Public Class MainForm
                 'YAxisSerialPort.BaudRate = 9600  ' Set the appropriate baud rate
                 'YAxisSerialPort.Open()
                 IsConnectedToYAxisCOM = True
+                'YAxisSerialPort.WriteLine("$101 = 29.78")
+                Dim text = YAxisSerialPort.ReadLine()
                 MessageBox.Show("Connected to Arduino 2 (Y axis) on " & YAxisSerialPort.PortName)
             Catch ex As Exception
                 MessageBox.Show("Failed to connect to Arduino 2: " & ex.Message)
@@ -87,13 +91,15 @@ Public Class MainForm
 
         If clickedButton IsNot Nothing Then
             Select Case clickedButton.Name
-                Case "XSimulationButton"
+                Case XSimulationButton.Name
                     ' Get the selected earthquake from the DataGridView
                     If EarthquakeSelectionDGV.SelectedRows.Count > 0 Then
                         Dim selectedEarthquake As String = EarthquakeSelectionDGV.SelectedRows(0).Cells(0).Value.ToString()
                         Dim filePath As String = $"C:\Earthquakes\{selectedEarthquake}X.txt"
 
                         If File.Exists(filePath) Then
+                            ReadAndDisplayXData(filePath)
+
                             If IsConnectedToXAxisCOM Then
                                 ' Send initial G-code commands
                                 XAxisSerialPort.WriteLine("$100 = 29.78")
@@ -113,16 +119,17 @@ Public Class MainForm
                         MessageBox.Show("Please select an earthquake.")
                     End If
 
-                Case "YSimulationButton"
+                Case YSimulationButton.Name
                     ' Get the selected earthquake from the DataGridView
                     If EarthquakeSelectionDGV.SelectedRows.Count > 0 Then
                         Dim selectedEarthquake As String = EarthquakeSelectionDGV.SelectedRows(0).Cells(0).Value.ToString()
                         Dim filePath As String = $"C:\Earthquakes\{selectedEarthquake}Y.txt"
 
                         If File.Exists(filePath) Then
+                            ReadAndDisplayYData(filePath)
                             If IsConnectedToYAxisCOM Then
                                 ' Send initial G-code commands
-                                YAxisSerialPort.WriteLine("$100 = 29.78")
+                                'YAxisSerialPort.WriteLine("$101 = 29.78")
                                 YAxisSerialPort.WriteLine("G90 G21 G94")
 
                                 ' Start BackgroundWorker to read file and write to serial port
@@ -139,15 +146,36 @@ Public Class MainForm
                         MessageBox.Show("Please select an earthquake.")
                     End If
 
-                Case "XYSimulationButton"
-                    ' Logic for XYSimulationButton click
-                    MessageBox.Show("Button 3 clicked")
+                Case XYSimulationButton.Name
+                    XSimulationButton.PerformClick()
+                    YSimulationButton.PerformClick()
 
-                Case "HomeSimulatorButton"
-                    ' Logic for HomeSimulatorButton click
-                    MessageBox.Show("Button 4 clicked")
+                Case HomeSimulatorButton.Name
+                    'If XAxisSerialPort.IsOpen Then
+                    '    XAxisSerialPort.WriteLine("G01 X200 F2000")
+                    '    TextBox1.Text = XAxisSerialPort.ReadLine()
+                    'End If
+                    'If YAxisSerialPort.IsOpen Then
+                    '    YAxisSerialPort.WriteLine("G01 Y360 F3600")
+                    'End If
 
-                Case "StopSimulationButton"
+                    If IsConnectedToXAxisCOM Then
+                        XAxisSerialPort.WriteLine("G90 G21 G94")
+                        XAxisSerialPort.WriteLine("G01 X200 F2000")
+                        TextBox1.AppendText(XAxisSerialPort.ReadLine()) ' Updates the TextBox safely
+                    Else
+                        'MessageBox.Show("X axis COM port is not connected.")
+                    End If
+
+                    If IsConnectedToYAxisCOM Then
+                        YAxisSerialPort.WriteLine("G90 G21 G94")
+                        YAxisSerialPort.WriteLine("G01 Y360 F3600")
+                        TextBox2.AppendText(YAxisSerialPort.ReadLine()) ' Updates the TextBox safely
+                    Else
+                        'MessageBox.Show("Y axis COM port is not connected.")
+                    End If
+
+                Case StopSimulationButton.Name
                     ' Logic for StopSimulationButton click
                     ' Add logic to stop the simulation if running
                     If bgWorkerX.IsBusy Then
@@ -175,14 +203,18 @@ Public Class MainForm
                 If bgWorkerX.CancellationPending Then
                     e.Cancel = True
                 Else
-                    'XChart.Series(0).Points.AddY(value(1) - 200) 'displays the gcode line of codes being read by the arduino to a chart
-                    ' Use Invoke to update the TextBox on the UI thread
-                    Me.Invoke(Sub()
-                                  TextBox1.AppendText(line & vbNewLine) ' Updates the TextBox safely
-                              End Sub)
-                    XAxisSerialPort.WriteLine(line) 'sends Gcode to arduino
-                    ' Wait for 10 milliseconds (simulate time interval)
-                    'Threading.Thread.Sleep(10)
+                    Dim readbuffer = XAxisSerialPort.ReadLine()
+                    If readbuffer.IndexOf("ok") >= 0 Then
+                        'XChart.Series(0).Points.AddY(value(1) - 200) 'displays the gcode line of codes being read by the arduino to a chart
+                        ' Use Invoke to update the TextBox on the UI thread
+                        Me.Invoke(Sub()
+                                      TextBox1.AppendText(line & vbNewLine) ' Updates the TextBox safely
+                                  End Sub)
+                        XAxisSerialPort.WriteLine(line) 'sends Gcode to arduino
+                        ' Wait for 10 milliseconds (simulate time interval)
+                        'Threading.Thread.Sleep(10)
+                    End If
+
                 End If
             Loop
         Catch ex As Exception
@@ -209,14 +241,17 @@ Public Class MainForm
                 If bgWorkerY.CancellationPending Then
                     e.Cancel = True
                 Else
-                    'XChart.Series(0).Points.AddY(value(1) - 200) 'displays the gcode line of codes being read by the arduino to a chart
-                    ' Use Invoke to update the TextBox on the UI thread
-                    Me.Invoke(Sub()
-                                  TextBox2.AppendText(line & vbNewLine) ' Updates the TextBox safely
-                              End Sub)
-                    YAxisSerialPort.WriteLine(line) 'sends Gcode to arduino
-                    ' Wait for 10 milliseconds (simulate time interval)
-                    'Threading.Thread.Sleep(10)
+                    Dim readbuffer = YAxisSerialPort.ReadLine()
+                    If readbuffer.IndexOf("ok") >= 0 Then
+                        'XChart.Series(0).Points.AddY(value(1) - 200) 'displays the gcode line of codes being read by the arduino to a chart
+                        ' Use Invoke to update the TextBox on the UI thread
+                        Me.Invoke(Sub()
+                                      TextBox2.AppendText(line & vbNewLine) ' Updates the TextBox safely
+                                  End Sub)
+                        YAxisSerialPort.WriteLine(line) 'sends Gcode to arduino
+                        'Wait for 10 milliseconds (simulate time interval)
+                        'Threading.Thread.Sleep(1)
+                    End If
                 End If
             Loop
         Catch ex As Exception
@@ -250,12 +285,14 @@ Public Class MainForm
     End Sub
 
     Private Sub CloseConnection()
-        If IsConnectedToXAxisCOM AndAlso XAxisSerialPort.IsOpen Then
+        'If IsConnectedToXAxisCOM AndAlso XAxisSerialPort.IsOpen Then
+        If XAxisSerialPort.IsOpen Then
             XAxisSerialPort.Close()
             IsConnectedToXAxisCOM = False
         End If
 
-        If IsConnectedToYAxisCOM AndAlso YAxisSerialPort.IsOpen Then
+        'If IsConnectedToYAxisCOM AndAlso YAxisSerialPort.IsOpen Then
+        If YAxisSerialPort.IsOpen Then
             YAxisSerialPort.Close()
             IsConnectedToYAxisCOM = False
         End If
@@ -266,6 +303,74 @@ Public Class MainForm
         EarthquakeSelectionDGV.Rows.Add("Kobe")
         EarthquakeSelectionDGV.Rows.Add("Northridge")
         EarthquakeSelectionDGV.Rows.Add("LomaPrieta")
+        EarthquakeSelectionDGV.Rows.Add("Landers")
+        EarthquakeSelectionDGV.Rows.Add("ChiChi")
+        EarthquakeSelectionDGV.Rows.Add("Hollister")
+        EarthquakeSelectionDGV.Rows.Add("ImperialValley")
+    End Sub
+
+    Private Sub ReadAndDisplayXData(filePath As String)
+        ' Clear previous chart data
+        XVisualizationChart.Series.Clear()
+
+        ' Create a new series for the chart
+        Dim series As New Series("X Motion Data")
+        series.ChartType = SeriesChartType.FastLine
+        XVisualizationChart.Series.Add(series)
+
+        Try
+            ' Read all lines from the file
+            Dim lines As String() = File.ReadAllLines(filePath)
+
+            ' Loop through each line in the file
+            For Each line As String In lines
+                ' Split the line by spaces
+                Dim parts As String() = line.Split(" "c)
+
+                ' Check if the line has at least 3 parts
+                If parts.Length >= 3 Then
+                    ' Extract the middle value (F) and subtract 200
+                    Dim xValue As Double = Double.Parse(parts(1)) - 200
+
+                    ' Add the calculated value to the chart
+                    series.Points.AddY(xValue)
+                End If
+            Next
+        Catch ex As Exception
+            MessageBox.Show("Error reading the file: " & ex.Message)
+        End Try
+    End Sub
+
+    Private Sub ReadAndDisplayYData(filePath As String)
+        ' Clear previous chart data
+        YVisualizationChart.Series.Clear()
+
+        ' Create a new series for the chart
+        Dim series As New Series("Y Motion Data")
+        series.ChartType = SeriesChartType.FastLine
+        YVisualizationChart.Series.Add(series)
+
+        Try
+            ' Read all lines from the file
+            Dim lines As String() = File.ReadAllLines(filePath)
+
+            ' Loop through each line in the file
+            For Each line As String In lines
+                ' Split the line by spaces
+                Dim parts As String() = line.Split(" "c)
+
+                ' Check if the line has at least 3 parts
+                If parts.Length >= 3 Then
+                    ' Extract the middle value (F) and subtract 200
+                    Dim xValue As Double = Double.Parse(parts(1)) - 200
+
+                    ' Add the calculated value to the chart
+                    series.Points.AddY(xValue)
+                End If
+            Next
+        Catch ex As Exception
+            MessageBox.Show("Error reading the file: " & ex.Message)
+        End Try
     End Sub
 #End Region
 
