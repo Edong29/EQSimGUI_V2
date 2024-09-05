@@ -96,6 +96,7 @@ Public Class MainForm
                     If EarthquakeSelectionDGV.SelectedRows.Count > 0 Then
                         Dim selectedEarthquake As String = EarthquakeSelectionDGV.SelectedRows(0).Cells(0).Value.ToString()
                         Dim filePath As String = $"C:\Earthquakes\{selectedEarthquake}X.txt"
+                        XVisualizationChart.Series.Clear()
 
                         If File.Exists(filePath) Then
                             ReadAndDisplayXData(filePath)
@@ -124,6 +125,7 @@ Public Class MainForm
                     If EarthquakeSelectionDGV.SelectedRows.Count > 0 Then
                         Dim selectedEarthquake As String = EarthquakeSelectionDGV.SelectedRows(0).Cells(0).Value.ToString()
                         Dim filePath As String = $"C:\Earthquakes\{selectedEarthquake}Y.txt"
+                        YVisualizationChart.Series.Clear()
 
                         If File.Exists(filePath) Then
                             ReadAndDisplayYData(filePath)
