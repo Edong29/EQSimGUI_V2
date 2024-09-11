@@ -20,6 +20,7 @@ Public Class MainForm
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         InitializeComPorts()
         FillEarthquakeSelection()
+        FillFrequencySelection()
     End Sub
 
     Private Sub MicrocontrollerConnectionButton_Click(sender As Object, e As EventArgs) Handles MicrocontrollerConnectionButton.Click
@@ -92,39 +93,81 @@ Public Class MainForm
         If clickedButton IsNot Nothing Then
             Select Case clickedButton.Name
                 Case XSimulationButton.Name
-                    ' Get the selected earthquake from the DataGridView
-                    If EarthquakeSelectionDGV.SelectedRows.Count > 0 Then
-                        Dim selectedEarthquake As String = EarthquakeSelectionDGV.SelectedRows(0).Cells(0).Value.ToString()
-                        Dim filePath As String = $"C:\Earthquakes\{selectedEarthquake}X.txt"
-                        XVisualizationChart.Series.Clear()
+                    ' Check the selected tab
+                    If SimulationModeTabControl.SelectedTab Is EarthquakeSelectionTabPage Then
+                        ' Earthquake tab selected
+                        If EarthquakeSelectionDGV.SelectedRows.Count > 0 Then
+                            Dim selectedEarthquake As String = EarthquakeSelectionDGV.SelectedRows(0).Cells(0).Value.ToString()
+                            Dim filePath As String = $"C:\Earthquakes\{selectedEarthquake}X.txt"
+                            XVisualizationChart.Series.Clear()
+                            YVisualizationChart.Series.Clear()
 
-                        If File.Exists(filePath) Then
-                            ReadAndDisplayXData(filePath)
 
-                            If IsConnectedToXAxisCOM Then
-                                ' Send initial G-code commands
-                                XAxisSerialPort.WriteLine("$100 = 29.78")
-                                XAxisSerialPort.WriteLine("G90 G21 G94")
+                            If File.Exists(filePath) Then
+                                ReadAndDisplayXData(filePath)
 
-                                ' Start BackgroundWorker to read file and write to serial port
-                                If Not bgWorkerX.IsBusy Then
-                                    bgWorkerX.RunWorkerAsync(filePath)
+                                If IsConnectedToXAxisCOM Then
+                                    ' Send initial G-code commands
+                                    XAxisSerialPort.WriteLine("$100 = 29.78")
+                                    XAxisSerialPort.WriteLine("G90 G21 G94")
+
+                                    ' Start BackgroundWorker to read file and write to serial port
+                                    If Not bgWorkerX.IsBusy Then
+                                        bgWorkerX.RunWorkerAsync(filePath)
+                                    End If
+                                Else
+                                    MessageBox.Show("X axis COM port is not connected.")
                                 End If
                             Else
-                                MessageBox.Show("X axis COM port is not connected.")
+                                MessageBox.Show($"File {filePath} not found.")
                             End If
                         Else
-                            MessageBox.Show($"File {filePath} not found.")
+                            MessageBox.Show("Please select an earthquake.")
                         End If
-                    Else
-                        MessageBox.Show("Please select an earthquake.")
+
+                    ElseIf SimulationModeTabControl.SelectedTab Is SinusoidalSelectionTabPage Then
+                        ' Sinusoidal tab selected
+                        If SinusoidalSelectionDGV.SelectedRows.Count > 0 Then
+                            Dim frequency As String = SinusoidalSelectionDGV.SelectedRows(0).Cells(0).Value.ToString()
+                            Dim amplitude As String = SinusoidalSelectionDGV.SelectedRows(0).Cells(1).Value.ToString()
+                            Dim filePath As String = $"C:\Earthquakes\Frequencies\{frequency} {amplitude}.txt"
+                            XVisualizationChart.Series.Clear()
+                            YVisualizationChart.Series.Clear()
+
+                            If File.Exists(filePath) Then
+                                ReadAndDisplayXData(filePath)
+
+                                If IsConnectedToXAxisCOM Then
+                                    ' Send initial G-code commands
+                                    XAxisSerialPort.WriteLine("$100 = 29.78")
+                                    XAxisSerialPort.WriteLine("G90 G21 G94")
+
+                                    ' Start BackgroundWorker to read file and write to serial port
+                                    If Not bgWorkerX.IsBusy Then
+                                        bgWorkerX.RunWorkerAsync(filePath)
+                                    End If
+                                Else
+                                    MessageBox.Show("X axis COM port is not connected.")
+                                End If
+                            Else
+                                MessageBox.Show($"File {filePath} not found.")
+                            End If
+                        Else
+                            MessageBox.Show("Please select frequency and amplitude.")
+                        End If
+
+                    ElseIf SimulationModeTabControl.SelectedTab Is CustomFileTabPage Then
+                        ' Custom tab selected
+                        ' Add your custom simulation logic here
                     End If
+
 
                 Case YSimulationButton.Name
                     ' Get the selected earthquake from the DataGridView
                     If EarthquakeSelectionDGV.SelectedRows.Count > 0 Then
                         Dim selectedEarthquake As String = EarthquakeSelectionDGV.SelectedRows(0).Cells(0).Value.ToString()
                         Dim filePath As String = $"C:\Earthquakes\{selectedEarthquake}Y.txt"
+                        XVisualizationChart.Series.Clear()
                         YVisualizationChart.Series.Clear()
 
                         If File.Exists(filePath) Then
@@ -270,6 +313,17 @@ Public Class MainForm
         End If
     End Sub
 
+    Private Sub SimulationModeTabControl_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SimulationModeTabControl.SelectedIndexChanged
+
+        If SimulationModeTabControl.SelectedTab Is SinusoidalSelectionTabPage Then
+            XYSimulationButton.Enabled = False
+            YSimulationButton.Enabled = False
+        ElseIf SimulationModeTabControl.SelectedTab Is CustomFileTabPage Or SimulationModeTabControl.SelectedTab Is EarthquakeSelectionTabPage Then
+            XYSimulationButton.Enabled = True
+            YSimulationButton.Enabled = True
+        End If
+    End Sub
+
 #End Region
 
 #Region "Functions"
@@ -309,6 +363,22 @@ Public Class MainForm
         EarthquakeSelectionDGV.Rows.Add("ChiChi")
         EarthquakeSelectionDGV.Rows.Add("Hollister")
         EarthquakeSelectionDGV.Rows.Add("ImperialValley")
+    End Sub
+
+    Private Sub FillFrequencySelection()
+        SinusoidalSelectionDGV.Rows.Clear()
+        SinusoidalSelectionDGV.Rows.Add("0.5Hz", "2mm")
+        SinusoidalSelectionDGV.Rows.Add("1.0Hz", "2mm")
+        SinusoidalSelectionDGV.Rows.Add("1.5Hz", "2mm")
+        SinusoidalSelectionDGV.Rows.Add("2.0Hz", "2mm")
+        SinusoidalSelectionDGV.Rows.Add("2.5Hz", "2mm")
+        SinusoidalSelectionDGV.Rows.Add("3.0Hz", "2mm")
+        SinusoidalSelectionDGV.Rows.Add("3.5Hz", "2mm")
+        SinusoidalSelectionDGV.Rows.Add("4.0Hz", "2mm")
+        SinusoidalSelectionDGV.Rows.Add("4.5Hz", "2mm")
+        SinusoidalSelectionDGV.Rows.Add("5.0Hz", "2mm")
+        SinusoidalSelectionDGV.Rows.Add("5.5Hz", "2mm")
+        SinusoidalSelectionDGV.Rows.Add("6.0Hz", "2mm")
     End Sub
 
     Private Sub ReadAndDisplayXData(filePath As String)

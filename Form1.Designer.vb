@@ -22,12 +22,12 @@ Partial Class MainForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim ChartArea6 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
-        Dim Legend6 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
-        Dim Series6 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
         Dim ChartArea5 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
         Dim Legend5 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
         Dim Series5 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
+        Dim ChartArea6 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
+        Dim Legend6 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
+        Dim Series6 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
         Me.MainPanel = New System.Windows.Forms.Panel()
         Me.TitleLabel = New System.Windows.Forms.Label()
         Me.GUITabControl = New System.Windows.Forms.TabControl()
@@ -39,39 +39,47 @@ Partial Class MainForm
         Me.XAxisConnectionComboBox = New System.Windows.Forms.ComboBox()
         Me.YAxisConnectionlabel = New System.Windows.Forms.Label()
         Me.XAxisConnectionLabel = New System.Windows.Forms.Label()
-        Me.EarthquakeTabPage = New System.Windows.Forms.TabPage()
+        Me.SimulationTabPage = New System.Windows.Forms.TabPage()
         Me.EarthquakeSimulationControlsGroupBox = New System.Windows.Forms.GroupBox()
         Me.StopSimulationButton = New System.Windows.Forms.Button()
         Me.HomeSimulatorButton = New System.Windows.Forms.Button()
         Me.XYSimulationButton = New System.Windows.Forms.Button()
         Me.YSimulationButton = New System.Windows.Forms.Button()
         Me.XSimulationButton = New System.Windows.Forms.Button()
-        Me.EarthquakeSimulationVisualizerGroupBox = New System.Windows.Forms.GroupBox()
+        Me.SimulationVisualizerGroupBox = New System.Windows.Forms.GroupBox()
         Me.YAxisVisualizationPanel = New System.Windows.Forms.Panel()
         Me.TextBox2 = New System.Windows.Forms.TextBox()
+        Me.YVisualizationChart = New System.Windows.Forms.DataVisualization.Charting.Chart()
         Me.XAxisVisualizationPanel = New System.Windows.Forms.Panel()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
-        Me.EarthQuakeSelectionGroupBox = New System.Windows.Forms.GroupBox()
-        Me.EarthquakeSelectionDGV = New System.Windows.Forms.DataGridView()
-        Me.EarthquakeNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SinusoidalTabPage = New System.Windows.Forms.TabPage()
+        Me.XVisualizationChart = New System.Windows.Forms.DataVisualization.Charting.Chart()
         Me.bgWorkerX = New System.ComponentModel.BackgroundWorker()
         Me.bgWorkerY = New System.ComponentModel.BackgroundWorker()
-        Me.XVisualizationChart = New System.Windows.Forms.DataVisualization.Charting.Chart()
-        Me.YVisualizationChart = New System.Windows.Forms.DataVisualization.Charting.Chart()
+        Me.EarthquakeSelectionDGV = New System.Windows.Forms.DataGridView()
+        Me.EarthquakeNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SimulationModeTabControl = New System.Windows.Forms.TabControl()
+        Me.EarthquakeSelectionTabPage = New System.Windows.Forms.TabPage()
+        Me.SinusoidalSelectionTabPage = New System.Windows.Forms.TabPage()
+        Me.CustomFileTabPage = New System.Windows.Forms.TabPage()
+        Me.SinusoidalSelectionDGV = New System.Windows.Forms.DataGridView()
+        Me.FrequencyColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AmplitudeColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MainPanel.SuspendLayout()
         Me.GUITabControl.SuspendLayout()
         Me.InitializationTabPage.SuspendLayout()
         Me.ArduinoGroupBox.SuspendLayout()
-        Me.EarthquakeTabPage.SuspendLayout()
+        Me.SimulationTabPage.SuspendLayout()
         Me.EarthquakeSimulationControlsGroupBox.SuspendLayout()
-        Me.EarthquakeSimulationVisualizerGroupBox.SuspendLayout()
+        Me.SimulationVisualizerGroupBox.SuspendLayout()
         Me.YAxisVisualizationPanel.SuspendLayout()
-        Me.XAxisVisualizationPanel.SuspendLayout()
-        Me.EarthQuakeSelectionGroupBox.SuspendLayout()
-        CType(Me.EarthquakeSelectionDGV, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.XVisualizationChart, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.YVisualizationChart, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.XAxisVisualizationPanel.SuspendLayout()
+        CType(Me.XVisualizationChart, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.EarthquakeSelectionDGV, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SimulationModeTabControl.SuspendLayout()
+        Me.EarthquakeSelectionTabPage.SuspendLayout()
+        Me.SinusoidalSelectionTabPage.SuspendLayout()
+        CType(Me.SinusoidalSelectionDGV, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MainPanel
@@ -96,8 +104,7 @@ Partial Class MainForm
         'GUITabControl
         '
         Me.GUITabControl.Controls.Add(Me.InitializationTabPage)
-        Me.GUITabControl.Controls.Add(Me.EarthquakeTabPage)
-        Me.GUITabControl.Controls.Add(Me.SinusoidalTabPage)
+        Me.GUITabControl.Controls.Add(Me.SimulationTabPage)
         Me.GUITabControl.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GUITabControl.Location = New System.Drawing.Point(12, 118)
         Me.GUITabControl.Name = "GUITabControl"
@@ -185,18 +192,18 @@ Partial Class MainForm
         Me.XAxisConnectionLabel.TabIndex = 0
         Me.XAxisConnectionLabel.Text = "X Axis Connection:"
         '
-        'EarthquakeTabPage
+        'SimulationTabPage
         '
-        Me.EarthquakeTabPage.Controls.Add(Me.EarthquakeSimulationControlsGroupBox)
-        Me.EarthquakeTabPage.Controls.Add(Me.EarthquakeSimulationVisualizerGroupBox)
-        Me.EarthquakeTabPage.Controls.Add(Me.EarthQuakeSelectionGroupBox)
-        Me.EarthquakeTabPage.Location = New System.Drawing.Point(4, 25)
-        Me.EarthquakeTabPage.Name = "EarthquakeTabPage"
-        Me.EarthquakeTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.EarthquakeTabPage.Size = New System.Drawing.Size(1600, 692)
-        Me.EarthquakeTabPage.TabIndex = 1
-        Me.EarthquakeTabPage.Text = "(2) Earthquake Simulation"
-        Me.EarthquakeTabPage.UseVisualStyleBackColor = True
+        Me.SimulationTabPage.Controls.Add(Me.SimulationModeTabControl)
+        Me.SimulationTabPage.Controls.Add(Me.EarthquakeSimulationControlsGroupBox)
+        Me.SimulationTabPage.Controls.Add(Me.SimulationVisualizerGroupBox)
+        Me.SimulationTabPage.Location = New System.Drawing.Point(4, 25)
+        Me.SimulationTabPage.Name = "SimulationTabPage"
+        Me.SimulationTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.SimulationTabPage.Size = New System.Drawing.Size(1600, 692)
+        Me.SimulationTabPage.TabIndex = 1
+        Me.SimulationTabPage.Text = "(2) Simulation"
+        Me.SimulationTabPage.UseVisualStyleBackColor = True
         '
         'EarthquakeSimulationControlsGroupBox
         '
@@ -257,16 +264,16 @@ Partial Class MainForm
         Me.XSimulationButton.Text = "X"
         Me.XSimulationButton.UseVisualStyleBackColor = True
         '
-        'EarthquakeSimulationVisualizerGroupBox
+        'SimulationVisualizerGroupBox
         '
-        Me.EarthquakeSimulationVisualizerGroupBox.Controls.Add(Me.YAxisVisualizationPanel)
-        Me.EarthquakeSimulationVisualizerGroupBox.Controls.Add(Me.XAxisVisualizationPanel)
-        Me.EarthquakeSimulationVisualizerGroupBox.Location = New System.Drawing.Point(291, 6)
-        Me.EarthquakeSimulationVisualizerGroupBox.Name = "EarthquakeSimulationVisualizerGroupBox"
-        Me.EarthquakeSimulationVisualizerGroupBox.Size = New System.Drawing.Size(1303, 680)
-        Me.EarthquakeSimulationVisualizerGroupBox.TabIndex = 1
-        Me.EarthquakeSimulationVisualizerGroupBox.TabStop = False
-        Me.EarthquakeSimulationVisualizerGroupBox.Text = "Earthquake Simulation Visualizer"
+        Me.SimulationVisualizerGroupBox.Controls.Add(Me.YAxisVisualizationPanel)
+        Me.SimulationVisualizerGroupBox.Controls.Add(Me.XAxisVisualizationPanel)
+        Me.SimulationVisualizerGroupBox.Location = New System.Drawing.Point(291, 6)
+        Me.SimulationVisualizerGroupBox.Name = "SimulationVisualizerGroupBox"
+        Me.SimulationVisualizerGroupBox.Size = New System.Drawing.Size(1303, 680)
+        Me.SimulationVisualizerGroupBox.TabIndex = 1
+        Me.SimulationVisualizerGroupBox.TabStop = False
+        Me.SimulationVisualizerGroupBox.Text = "Simulation Visualizer"
         '
         'YAxisVisualizationPanel
         '
@@ -287,6 +294,23 @@ Partial Class MainForm
         Me.TextBox2.Size = New System.Drawing.Size(161, 287)
         Me.TextBox2.TabIndex = 5
         '
+        'YVisualizationChart
+        '
+        ChartArea5.Name = "ChartArea1"
+        Me.YVisualizationChart.ChartAreas.Add(ChartArea5)
+        Me.YVisualizationChart.Dock = System.Windows.Forms.DockStyle.Fill
+        Legend5.Name = "Legend1"
+        Me.YVisualizationChart.Legends.Add(Legend5)
+        Me.YVisualizationChart.Location = New System.Drawing.Point(0, 0)
+        Me.YVisualizationChart.Name = "YVisualizationChart"
+        Series5.ChartArea = "ChartArea1"
+        Series5.Legend = "Legend1"
+        Series5.Name = "Series1"
+        Me.YVisualizationChart.Series.Add(Series5)
+        Me.YVisualizationChart.Size = New System.Drawing.Size(1291, 323)
+        Me.YVisualizationChart.TabIndex = 6
+        Me.YVisualizationChart.Text = "Chart1"
+        '
         'XAxisVisualizationPanel
         '
         Me.XAxisVisualizationPanel.Controls.Add(Me.TextBox1)
@@ -306,55 +330,6 @@ Partial Class MainForm
         Me.TextBox1.Size = New System.Drawing.Size(161, 287)
         Me.TextBox1.TabIndex = 4
         '
-        'EarthQuakeSelectionGroupBox
-        '
-        Me.EarthQuakeSelectionGroupBox.Controls.Add(Me.EarthquakeSelectionDGV)
-        Me.EarthQuakeSelectionGroupBox.Location = New System.Drawing.Point(6, 6)
-        Me.EarthQuakeSelectionGroupBox.Name = "EarthQuakeSelectionGroupBox"
-        Me.EarthQuakeSelectionGroupBox.Size = New System.Drawing.Size(279, 486)
-        Me.EarthQuakeSelectionGroupBox.TabIndex = 0
-        Me.EarthQuakeSelectionGroupBox.TabStop = False
-        Me.EarthQuakeSelectionGroupBox.Text = "Earthquake Selection"
-        '
-        'EarthquakeSelectionDGV
-        '
-        Me.EarthquakeSelectionDGV.AllowUserToAddRows = False
-        Me.EarthquakeSelectionDGV.AllowUserToDeleteRows = False
-        Me.EarthquakeSelectionDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.EarthquakeSelectionDGV.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.EarthquakeNameColumn})
-        Me.EarthquakeSelectionDGV.Location = New System.Drawing.Point(6, 21)
-        Me.EarthquakeSelectionDGV.MultiSelect = False
-        Me.EarthquakeSelectionDGV.Name = "EarthquakeSelectionDGV"
-        Me.EarthquakeSelectionDGV.ReadOnly = True
-        Me.EarthquakeSelectionDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.EarthquakeSelectionDGV.Size = New System.Drawing.Size(267, 459)
-        Me.EarthquakeSelectionDGV.TabIndex = 0
-        '
-        'EarthquakeNameColumn
-        '
-        Me.EarthquakeNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.EarthquakeNameColumn.HeaderText = "Earthquake"
-        Me.EarthquakeNameColumn.Name = "EarthquakeNameColumn"
-        Me.EarthquakeNameColumn.ReadOnly = True
-        '
-        'SinusoidalTabPage
-        '
-        Me.SinusoidalTabPage.Location = New System.Drawing.Point(4, 25)
-        Me.SinusoidalTabPage.Name = "SinusoidalTabPage"
-        Me.SinusoidalTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.SinusoidalTabPage.Size = New System.Drawing.Size(1600, 692)
-        Me.SinusoidalTabPage.TabIndex = 2
-        Me.SinusoidalTabPage.Text = "(3) Sinusoidal Wave Simulation"
-        Me.SinusoidalTabPage.UseVisualStyleBackColor = True
-        '
-        'bgWorkerX
-        '
-        Me.bgWorkerX.WorkerSupportsCancellation = True
-        '
-        'bgWorkerY
-        '
-        Me.bgWorkerY.WorkerSupportsCancellation = True
-        '
         'XVisualizationChart
         '
         ChartArea6.Name = "ChartArea1"
@@ -372,22 +347,104 @@ Partial Class MainForm
         Me.XVisualizationChart.TabIndex = 5
         Me.XVisualizationChart.Text = "Chart1"
         '
-        'YVisualizationChart
+        'bgWorkerX
         '
-        ChartArea5.Name = "ChartArea1"
-        Me.YVisualizationChart.ChartAreas.Add(ChartArea5)
-        Me.YVisualizationChart.Dock = System.Windows.Forms.DockStyle.Fill
-        Legend5.Name = "Legend1"
-        Me.YVisualizationChart.Legends.Add(Legend5)
-        Me.YVisualizationChart.Location = New System.Drawing.Point(0, 0)
-        Me.YVisualizationChart.Name = "YVisualizationChart"
-        Series5.ChartArea = "ChartArea1"
-        Series5.Legend = "Legend1"
-        Series5.Name = "Series1"
-        Me.YVisualizationChart.Series.Add(Series5)
-        Me.YVisualizationChart.Size = New System.Drawing.Size(1291, 323)
-        Me.YVisualizationChart.TabIndex = 6
-        Me.YVisualizationChart.Text = "Chart1"
+        Me.bgWorkerX.WorkerSupportsCancellation = True
+        '
+        'bgWorkerY
+        '
+        Me.bgWorkerY.WorkerSupportsCancellation = True
+        '
+        'EarthquakeSelectionDGV
+        '
+        Me.EarthquakeSelectionDGV.AllowUserToAddRows = False
+        Me.EarthquakeSelectionDGV.AllowUserToDeleteRows = False
+        Me.EarthquakeSelectionDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.EarthquakeSelectionDGV.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.EarthquakeNameColumn})
+        Me.EarthquakeSelectionDGV.Location = New System.Drawing.Point(6, 6)
+        Me.EarthquakeSelectionDGV.MultiSelect = False
+        Me.EarthquakeSelectionDGV.Name = "EarthquakeSelectionDGV"
+        Me.EarthquakeSelectionDGV.ReadOnly = True
+        Me.EarthquakeSelectionDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.EarthquakeSelectionDGV.Size = New System.Drawing.Size(259, 445)
+        Me.EarthquakeSelectionDGV.TabIndex = 0
+        '
+        'EarthquakeNameColumn
+        '
+        Me.EarthquakeNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.EarthquakeNameColumn.HeaderText = "Earthquake"
+        Me.EarthquakeNameColumn.Name = "EarthquakeNameColumn"
+        Me.EarthquakeNameColumn.ReadOnly = True
+        '
+        'SimulationModeTabControl
+        '
+        Me.SimulationModeTabControl.Controls.Add(Me.EarthquakeSelectionTabPage)
+        Me.SimulationModeTabControl.Controls.Add(Me.SinusoidalSelectionTabPage)
+        Me.SimulationModeTabControl.Controls.Add(Me.CustomFileTabPage)
+        Me.SimulationModeTabControl.Location = New System.Drawing.Point(6, 6)
+        Me.SimulationModeTabControl.Name = "SimulationModeTabControl"
+        Me.SimulationModeTabControl.SelectedIndex = 0
+        Me.SimulationModeTabControl.Size = New System.Drawing.Size(279, 486)
+        Me.SimulationModeTabControl.TabIndex = 3
+        '
+        'EarthquakeSelectionTabPage
+        '
+        Me.EarthquakeSelectionTabPage.Controls.Add(Me.EarthquakeSelectionDGV)
+        Me.EarthquakeSelectionTabPage.Location = New System.Drawing.Point(4, 25)
+        Me.EarthquakeSelectionTabPage.Name = "EarthquakeSelectionTabPage"
+        Me.EarthquakeSelectionTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.EarthquakeSelectionTabPage.Size = New System.Drawing.Size(271, 457)
+        Me.EarthquakeSelectionTabPage.TabIndex = 0
+        Me.EarthquakeSelectionTabPage.Text = "Earthquake"
+        Me.EarthquakeSelectionTabPage.UseVisualStyleBackColor = True
+        '
+        'SinusoidalSelectionTabPage
+        '
+        Me.SinusoidalSelectionTabPage.Controls.Add(Me.SinusoidalSelectionDGV)
+        Me.SinusoidalSelectionTabPage.Location = New System.Drawing.Point(4, 25)
+        Me.SinusoidalSelectionTabPage.Name = "SinusoidalSelectionTabPage"
+        Me.SinusoidalSelectionTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.SinusoidalSelectionTabPage.Size = New System.Drawing.Size(271, 457)
+        Me.SinusoidalSelectionTabPage.TabIndex = 1
+        Me.SinusoidalSelectionTabPage.Text = "Sinusoidal"
+        Me.SinusoidalSelectionTabPage.UseVisualStyleBackColor = True
+        '
+        'CustomFileTabPage
+        '
+        Me.CustomFileTabPage.Location = New System.Drawing.Point(4, 25)
+        Me.CustomFileTabPage.Name = "CustomFileTabPage"
+        Me.CustomFileTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.CustomFileTabPage.Size = New System.Drawing.Size(271, 457)
+        Me.CustomFileTabPage.TabIndex = 2
+        Me.CustomFileTabPage.Text = "Custom"
+        Me.CustomFileTabPage.UseVisualStyleBackColor = True
+        '
+        'SinusoidalSelectionDGV
+        '
+        Me.SinusoidalSelectionDGV.AllowUserToAddRows = False
+        Me.SinusoidalSelectionDGV.AllowUserToDeleteRows = False
+        Me.SinusoidalSelectionDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.SinusoidalSelectionDGV.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.FrequencyColumn, Me.AmplitudeColumn})
+        Me.SinusoidalSelectionDGV.Location = New System.Drawing.Point(6, 6)
+        Me.SinusoidalSelectionDGV.MultiSelect = False
+        Me.SinusoidalSelectionDGV.Name = "SinusoidalSelectionDGV"
+        Me.SinusoidalSelectionDGV.ReadOnly = True
+        Me.SinusoidalSelectionDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.SinusoidalSelectionDGV.Size = New System.Drawing.Size(259, 445)
+        Me.SinusoidalSelectionDGV.TabIndex = 1
+        '
+        'FrequencyColumn
+        '
+        Me.FrequencyColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.FrequencyColumn.HeaderText = "Frequency"
+        Me.FrequencyColumn.Name = "FrequencyColumn"
+        Me.FrequencyColumn.ReadOnly = True
+        '
+        'AmplitudeColumn
+        '
+        Me.AmplitudeColumn.HeaderText = "Amplitude"
+        Me.AmplitudeColumn.Name = "AmplitudeColumn"
+        Me.AmplitudeColumn.ReadOnly = True
         '
         'MainForm
         '
@@ -404,17 +461,20 @@ Partial Class MainForm
         Me.InitializationTabPage.ResumeLayout(False)
         Me.ArduinoGroupBox.ResumeLayout(False)
         Me.ArduinoGroupBox.PerformLayout()
-        Me.EarthquakeTabPage.ResumeLayout(False)
+        Me.SimulationTabPage.ResumeLayout(False)
         Me.EarthquakeSimulationControlsGroupBox.ResumeLayout(False)
-        Me.EarthquakeSimulationVisualizerGroupBox.ResumeLayout(False)
+        Me.SimulationVisualizerGroupBox.ResumeLayout(False)
         Me.YAxisVisualizationPanel.ResumeLayout(False)
         Me.YAxisVisualizationPanel.PerformLayout()
+        CType(Me.YVisualizationChart, System.ComponentModel.ISupportInitialize).EndInit()
         Me.XAxisVisualizationPanel.ResumeLayout(False)
         Me.XAxisVisualizationPanel.PerformLayout()
-        Me.EarthQuakeSelectionGroupBox.ResumeLayout(False)
-        CType(Me.EarthquakeSelectionDGV, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.XVisualizationChart, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.YVisualizationChart, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.EarthquakeSelectionDGV, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.SimulationModeTabControl.ResumeLayout(False)
+        Me.EarthquakeSelectionTabPage.ResumeLayout(False)
+        Me.SinusoidalSelectionTabPage.ResumeLayout(False)
+        CType(Me.SinusoidalSelectionDGV, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -429,24 +489,29 @@ Partial Class MainForm
     Private WithEvents XAxisConnectionComboBox As ComboBox
     Private WithEvents YAxisConnectionlabel As Label
     Private WithEvents XAxisConnectionLabel As Label
-    Private WithEvents EarthquakeTabPage As TabPage
+    Private WithEvents SimulationTabPage As TabPage
     Private WithEvents EarthquakeSimulationControlsGroupBox As GroupBox
     Private WithEvents StopSimulationButton As Button
     Private WithEvents HomeSimulatorButton As Button
     Private WithEvents XYSimulationButton As Button
     Private WithEvents YSimulationButton As Button
     Private WithEvents XSimulationButton As Button
-    Private WithEvents EarthquakeSimulationVisualizerGroupBox As GroupBox
+    Private WithEvents SimulationVisualizerGroupBox As GroupBox
     Private WithEvents YAxisVisualizationPanel As Panel
     Private WithEvents XAxisVisualizationPanel As Panel
-    Private WithEvents EarthQuakeSelectionGroupBox As GroupBox
-    Private WithEvents EarthquakeSelectionDGV As DataGridView
-    Private WithEvents EarthquakeNameColumn As DataGridViewTextBoxColumn
-    Private WithEvents SinusoidalTabPage As TabPage
     Friend WithEvents bgWorkerX As System.ComponentModel.BackgroundWorker
     Friend WithEvents TextBox1 As TextBox
     Friend WithEvents TextBox2 As TextBox
     Friend WithEvents bgWorkerY As System.ComponentModel.BackgroundWorker
     Friend WithEvents XVisualizationChart As DataVisualization.Charting.Chart
     Friend WithEvents YVisualizationChart As DataVisualization.Charting.Chart
+    Private WithEvents EarthquakeSelectionDGV As DataGridView
+    Private WithEvents EarthquakeNameColumn As DataGridViewTextBoxColumn
+    Friend WithEvents SimulationModeTabControl As TabControl
+    Friend WithEvents EarthquakeSelectionTabPage As TabPage
+    Friend WithEvents SinusoidalSelectionTabPage As TabPage
+    Friend WithEvents CustomFileTabPage As TabPage
+    Private WithEvents SinusoidalSelectionDGV As DataGridView
+    Friend WithEvents FrequencyColumn As DataGridViewTextBoxColumn
+    Friend WithEvents AmplitudeColumn As DataGridViewTextBoxColumn
 End Class
