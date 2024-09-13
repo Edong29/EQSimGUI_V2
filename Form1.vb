@@ -135,7 +135,15 @@ Public Class MainForm
                             YVisualizationChart.Series.Clear()
 
                             If File.Exists(filePath) Then
-                                ReadAndDisplayXData(filePath)
+                                Dim xValues = ReadAndDisplayXData(filePath)
+                                ' Assuming data is loaded into a list or array called "amplitudeData"
+                                Dim maxAmplitude As Double = xValues.Max()
+                                Dim minAmplitude As Double = xValues.Min()
+
+                                ' Update the chart's Y-axis
+                                XVisualizationChart.ChartAreas(0).AxisY.Maximum = maxAmplitude + 2 ' Add some padding
+                                XVisualizationChart.ChartAreas(0).AxisY.Minimum = minAmplitude - 2 ' Add some padding
+
 
                                 If IsConnectedToXAxisCOM Then
                                     ' Send initial G-code commands
@@ -367,6 +375,7 @@ Public Class MainForm
 
     Private Sub FillFrequencySelection()
         SinusoidalSelectionDGV.Rows.Clear()
+        '2mm
         SinusoidalSelectionDGV.Rows.Add("0.5Hz", "2mm")
         SinusoidalSelectionDGV.Rows.Add("1.0Hz", "2mm")
         SinusoidalSelectionDGV.Rows.Add("1.5Hz", "2mm")
@@ -379,9 +388,35 @@ Public Class MainForm
         SinusoidalSelectionDGV.Rows.Add("5.0Hz", "2mm")
         SinusoidalSelectionDGV.Rows.Add("5.5Hz", "2mm")
         SinusoidalSelectionDGV.Rows.Add("6.0Hz", "2mm")
+        '4mm
+        SinusoidalSelectionDGV.Rows.Add("0.5Hz", "4mm")
+        SinusoidalSelectionDGV.Rows.Add("1.0Hz", "4mm")
+        SinusoidalSelectionDGV.Rows.Add("1.5Hz", "4mm")
+        SinusoidalSelectionDGV.Rows.Add("2.0Hz", "4mm")
+        SinusoidalSelectionDGV.Rows.Add("2.5Hz", "4mm")
+        SinusoidalSelectionDGV.Rows.Add("3.0Hz", "4mm")
+        SinusoidalSelectionDGV.Rows.Add("3.5Hz", "4mm")
+        SinusoidalSelectionDGV.Rows.Add("4.0Hz", "4mm")
+        SinusoidalSelectionDGV.Rows.Add("4.5Hz", "4mm")
+        SinusoidalSelectionDGV.Rows.Add("5.0Hz", "4mm")
+        SinusoidalSelectionDGV.Rows.Add("5.5Hz", "4mm")
+        SinusoidalSelectionDGV.Rows.Add("6.0Hz", "4mm")
+        '6mm
+        SinusoidalSelectionDGV.Rows.Add("0.5Hz", "6mm")
+        SinusoidalSelectionDGV.Rows.Add("1.0Hz", "6mm")
+        SinusoidalSelectionDGV.Rows.Add("1.5Hz", "6mm")
+        SinusoidalSelectionDGV.Rows.Add("2.0Hz", "6mm")
+        SinusoidalSelectionDGV.Rows.Add("2.5Hz", "6mm")
+        SinusoidalSelectionDGV.Rows.Add("3.0Hz", "6mm")
+        SinusoidalSelectionDGV.Rows.Add("3.5Hz", "6mm")
+        SinusoidalSelectionDGV.Rows.Add("4.0Hz", "6mm")
+        SinusoidalSelectionDGV.Rows.Add("4.5Hz", "6mm")
+        SinusoidalSelectionDGV.Rows.Add("5.0Hz", "6mm")
+        SinusoidalSelectionDGV.Rows.Add("5.5Hz", "6mm")
+        SinusoidalSelectionDGV.Rows.Add("6.0Hz", "6mm")
     End Sub
 
-    Private Sub ReadAndDisplayXData(filePath As String)
+    Private Function ReadAndDisplayXData(filePath As String) As List(Of Double)
         ' Clear previous chart data
         XVisualizationChart.Series.Clear()
 
@@ -389,6 +424,9 @@ Public Class MainForm
         Dim series As New Series("X Motion Data")
         series.ChartType = SeriesChartType.FastLine
         XVisualizationChart.Series.Add(series)
+
+
+        Dim xValues As New List(Of Double)
 
         Try
             ' Read all lines from the file
@@ -406,12 +444,16 @@ Public Class MainForm
 
                     ' Add the calculated value to the chart
                     series.Points.AddY(xValue)
+
+                    xValues.Add(xValue)
                 End If
             Next
         Catch ex As Exception
             MessageBox.Show("Error reading the file: " & ex.Message)
         End Try
-    End Sub
+
+        Return xValues
+    End Function
 
     Private Sub ReadAndDisplayYData(filePath As String)
         ' Clear previous chart data
