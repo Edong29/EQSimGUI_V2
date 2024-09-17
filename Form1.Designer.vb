@@ -22,12 +22,12 @@ Partial Class MainForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim ChartArea5 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
-        Dim Legend5 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
-        Dim Series5 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
-        Dim ChartArea6 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
-        Dim Legend6 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
-        Dim Series6 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
+        Dim ChartArea1 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
+        Dim Legend1 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
+        Dim Series1 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
+        Dim ChartArea2 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
+        Dim Legend2 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
+        Dim Series2 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
         Me.MainPanel = New System.Windows.Forms.Panel()
         Me.TitleLabel = New System.Windows.Forms.Label()
         Me.GUITabControl = New System.Windows.Forms.TabControl()
@@ -40,6 +40,19 @@ Partial Class MainForm
         Me.YAxisConnectionlabel = New System.Windows.Forms.Label()
         Me.XAxisConnectionLabel = New System.Windows.Forms.Label()
         Me.SimulationTabPage = New System.Windows.Forms.TabPage()
+        Me.SimulationModeTabControl = New System.Windows.Forms.TabControl()
+        Me.EarthquakeSelectionTabPage = New System.Windows.Forms.TabPage()
+        Me.EarthquakeSelectionDGV = New System.Windows.Forms.DataGridView()
+        Me.EarthquakeNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SinusoidalSelectionTabPage = New System.Windows.Forms.TabPage()
+        Me.SinusoidalSelectionDGV = New System.Windows.Forms.DataGridView()
+        Me.FrequencyColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AmplitudeColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CustomFileTabPage = New System.Windows.Forms.TabPage()
+        Me.CustomYAxisButton = New System.Windows.Forms.Button()
+        Me.CustomYAxisFileTextbox = New System.Windows.Forms.TextBox()
+        Me.CustomXAxisButton = New System.Windows.Forms.Button()
+        Me.CustomXAxisFileTextbox = New System.Windows.Forms.TextBox()
         Me.EarthquakeSimulationControlsGroupBox = New System.Windows.Forms.GroupBox()
         Me.StopSimulationButton = New System.Windows.Forms.Button()
         Me.HomeSimulatorButton = New System.Windows.Forms.Button()
@@ -55,31 +68,25 @@ Partial Class MainForm
         Me.XVisualizationChart = New System.Windows.Forms.DataVisualization.Charting.Chart()
         Me.bgWorkerX = New System.ComponentModel.BackgroundWorker()
         Me.bgWorkerY = New System.ComponentModel.BackgroundWorker()
-        Me.EarthquakeSelectionDGV = New System.Windows.Forms.DataGridView()
-        Me.EarthquakeNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SimulationModeTabControl = New System.Windows.Forms.TabControl()
-        Me.EarthquakeSelectionTabPage = New System.Windows.Forms.TabPage()
-        Me.SinusoidalSelectionTabPage = New System.Windows.Forms.TabPage()
-        Me.CustomFileTabPage = New System.Windows.Forms.TabPage()
-        Me.SinusoidalSelectionDGV = New System.Windows.Forms.DataGridView()
-        Me.FrequencyColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AmplitudeColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bgWorkerCustomX = New System.ComponentModel.BackgroundWorker()
+        Me.bgWorkerCustomY = New System.ComponentModel.BackgroundWorker()
         Me.MainPanel.SuspendLayout()
         Me.GUITabControl.SuspendLayout()
         Me.InitializationTabPage.SuspendLayout()
         Me.ArduinoGroupBox.SuspendLayout()
         Me.SimulationTabPage.SuspendLayout()
+        Me.SimulationModeTabControl.SuspendLayout()
+        Me.EarthquakeSelectionTabPage.SuspendLayout()
+        CType(Me.EarthquakeSelectionDGV, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SinusoidalSelectionTabPage.SuspendLayout()
+        CType(Me.SinusoidalSelectionDGV, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.CustomFileTabPage.SuspendLayout()
         Me.EarthquakeSimulationControlsGroupBox.SuspendLayout()
         Me.SimulationVisualizerGroupBox.SuspendLayout()
         Me.YAxisVisualizationPanel.SuspendLayout()
         CType(Me.YVisualizationChart, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.XAxisVisualizationPanel.SuspendLayout()
         CType(Me.XVisualizationChart, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.EarthquakeSelectionDGV, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.SimulationModeTabControl.SuspendLayout()
-        Me.EarthquakeSelectionTabPage.SuspendLayout()
-        Me.SinusoidalSelectionTabPage.SuspendLayout()
-        CType(Me.SinusoidalSelectionDGV, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MainPanel
@@ -205,6 +212,133 @@ Partial Class MainForm
         Me.SimulationTabPage.Text = "(2) Simulation"
         Me.SimulationTabPage.UseVisualStyleBackColor = True
         '
+        'SimulationModeTabControl
+        '
+        Me.SimulationModeTabControl.Controls.Add(Me.EarthquakeSelectionTabPage)
+        Me.SimulationModeTabControl.Controls.Add(Me.SinusoidalSelectionTabPage)
+        Me.SimulationModeTabControl.Controls.Add(Me.CustomFileTabPage)
+        Me.SimulationModeTabControl.Location = New System.Drawing.Point(6, 6)
+        Me.SimulationModeTabControl.Name = "SimulationModeTabControl"
+        Me.SimulationModeTabControl.SelectedIndex = 0
+        Me.SimulationModeTabControl.Size = New System.Drawing.Size(279, 486)
+        Me.SimulationModeTabControl.TabIndex = 3
+        '
+        'EarthquakeSelectionTabPage
+        '
+        Me.EarthquakeSelectionTabPage.Controls.Add(Me.EarthquakeSelectionDGV)
+        Me.EarthquakeSelectionTabPage.Location = New System.Drawing.Point(4, 25)
+        Me.EarthquakeSelectionTabPage.Name = "EarthquakeSelectionTabPage"
+        Me.EarthquakeSelectionTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.EarthquakeSelectionTabPage.Size = New System.Drawing.Size(271, 457)
+        Me.EarthquakeSelectionTabPage.TabIndex = 0
+        Me.EarthquakeSelectionTabPage.Text = "Earthquake"
+        Me.EarthquakeSelectionTabPage.UseVisualStyleBackColor = True
+        '
+        'EarthquakeSelectionDGV
+        '
+        Me.EarthquakeSelectionDGV.AllowUserToAddRows = False
+        Me.EarthquakeSelectionDGV.AllowUserToDeleteRows = False
+        Me.EarthquakeSelectionDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.EarthquakeSelectionDGV.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.EarthquakeNameColumn})
+        Me.EarthquakeSelectionDGV.Location = New System.Drawing.Point(6, 6)
+        Me.EarthquakeSelectionDGV.MultiSelect = False
+        Me.EarthquakeSelectionDGV.Name = "EarthquakeSelectionDGV"
+        Me.EarthquakeSelectionDGV.ReadOnly = True
+        Me.EarthquakeSelectionDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.EarthquakeSelectionDGV.Size = New System.Drawing.Size(259, 445)
+        Me.EarthquakeSelectionDGV.TabIndex = 0
+        '
+        'EarthquakeNameColumn
+        '
+        Me.EarthquakeNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.EarthquakeNameColumn.HeaderText = "Earthquake"
+        Me.EarthquakeNameColumn.Name = "EarthquakeNameColumn"
+        Me.EarthquakeNameColumn.ReadOnly = True
+        '
+        'SinusoidalSelectionTabPage
+        '
+        Me.SinusoidalSelectionTabPage.Controls.Add(Me.SinusoidalSelectionDGV)
+        Me.SinusoidalSelectionTabPage.Location = New System.Drawing.Point(4, 25)
+        Me.SinusoidalSelectionTabPage.Name = "SinusoidalSelectionTabPage"
+        Me.SinusoidalSelectionTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.SinusoidalSelectionTabPage.Size = New System.Drawing.Size(271, 457)
+        Me.SinusoidalSelectionTabPage.TabIndex = 1
+        Me.SinusoidalSelectionTabPage.Text = "Sinusoidal"
+        Me.SinusoidalSelectionTabPage.UseVisualStyleBackColor = True
+        '
+        'SinusoidalSelectionDGV
+        '
+        Me.SinusoidalSelectionDGV.AllowUserToAddRows = False
+        Me.SinusoidalSelectionDGV.AllowUserToDeleteRows = False
+        Me.SinusoidalSelectionDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.SinusoidalSelectionDGV.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.FrequencyColumn, Me.AmplitudeColumn})
+        Me.SinusoidalSelectionDGV.Location = New System.Drawing.Point(6, 6)
+        Me.SinusoidalSelectionDGV.MultiSelect = False
+        Me.SinusoidalSelectionDGV.Name = "SinusoidalSelectionDGV"
+        Me.SinusoidalSelectionDGV.ReadOnly = True
+        Me.SinusoidalSelectionDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.SinusoidalSelectionDGV.Size = New System.Drawing.Size(259, 445)
+        Me.SinusoidalSelectionDGV.TabIndex = 1
+        '
+        'FrequencyColumn
+        '
+        Me.FrequencyColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.FrequencyColumn.HeaderText = "Frequency"
+        Me.FrequencyColumn.Name = "FrequencyColumn"
+        Me.FrequencyColumn.ReadOnly = True
+        '
+        'AmplitudeColumn
+        '
+        Me.AmplitudeColumn.HeaderText = "Amplitude"
+        Me.AmplitudeColumn.Name = "AmplitudeColumn"
+        Me.AmplitudeColumn.ReadOnly = True
+        '
+        'CustomFileTabPage
+        '
+        Me.CustomFileTabPage.Controls.Add(Me.CustomYAxisButton)
+        Me.CustomFileTabPage.Controls.Add(Me.CustomYAxisFileTextbox)
+        Me.CustomFileTabPage.Controls.Add(Me.CustomXAxisButton)
+        Me.CustomFileTabPage.Controls.Add(Me.CustomXAxisFileTextbox)
+        Me.CustomFileTabPage.Location = New System.Drawing.Point(4, 25)
+        Me.CustomFileTabPage.Name = "CustomFileTabPage"
+        Me.CustomFileTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.CustomFileTabPage.Size = New System.Drawing.Size(271, 457)
+        Me.CustomFileTabPage.TabIndex = 2
+        Me.CustomFileTabPage.Text = "Custom"
+        Me.CustomFileTabPage.UseVisualStyleBackColor = True
+        '
+        'CustomYAxisButton
+        '
+        Me.CustomYAxisButton.Location = New System.Drawing.Point(6, 91)
+        Me.CustomYAxisButton.Name = "CustomYAxisButton"
+        Me.CustomYAxisButton.Size = New System.Drawing.Size(75, 23)
+        Me.CustomYAxisButton.TabIndex = 3
+        Me.CustomYAxisButton.Text = "Y-Axis"
+        Me.CustomYAxisButton.UseVisualStyleBackColor = True
+        '
+        'CustomYAxisFileTextbox
+        '
+        Me.CustomYAxisFileTextbox.Location = New System.Drawing.Point(6, 63)
+        Me.CustomYAxisFileTextbox.Name = "CustomYAxisFileTextbox"
+        Me.CustomYAxisFileTextbox.Size = New System.Drawing.Size(259, 22)
+        Me.CustomYAxisFileTextbox.TabIndex = 2
+        '
+        'CustomXAxisButton
+        '
+        Me.CustomXAxisButton.Location = New System.Drawing.Point(6, 34)
+        Me.CustomXAxisButton.Name = "CustomXAxisButton"
+        Me.CustomXAxisButton.Size = New System.Drawing.Size(75, 23)
+        Me.CustomXAxisButton.TabIndex = 1
+        Me.CustomXAxisButton.Text = "X-Axis"
+        Me.CustomXAxisButton.UseVisualStyleBackColor = True
+        '
+        'CustomXAxisFileTextbox
+        '
+        Me.CustomXAxisFileTextbox.Location = New System.Drawing.Point(6, 6)
+        Me.CustomXAxisFileTextbox.Name = "CustomXAxisFileTextbox"
+        Me.CustomXAxisFileTextbox.Size = New System.Drawing.Size(259, 22)
+        Me.CustomXAxisFileTextbox.TabIndex = 0
+        '
         'EarthquakeSimulationControlsGroupBox
         '
         Me.EarthquakeSimulationControlsGroupBox.Controls.Add(Me.StopSimulationButton)
@@ -296,17 +430,17 @@ Partial Class MainForm
         '
         'YVisualizationChart
         '
-        ChartArea5.Name = "ChartArea1"
-        Me.YVisualizationChart.ChartAreas.Add(ChartArea5)
+        ChartArea1.Name = "ChartArea1"
+        Me.YVisualizationChart.ChartAreas.Add(ChartArea1)
         Me.YVisualizationChart.Dock = System.Windows.Forms.DockStyle.Fill
-        Legend5.Name = "Legend1"
-        Me.YVisualizationChart.Legends.Add(Legend5)
+        Legend1.Name = "Legend1"
+        Me.YVisualizationChart.Legends.Add(Legend1)
         Me.YVisualizationChart.Location = New System.Drawing.Point(0, 0)
         Me.YVisualizationChart.Name = "YVisualizationChart"
-        Series5.ChartArea = "ChartArea1"
-        Series5.Legend = "Legend1"
-        Series5.Name = "Series1"
-        Me.YVisualizationChart.Series.Add(Series5)
+        Series1.ChartArea = "ChartArea1"
+        Series1.Legend = "Legend1"
+        Series1.Name = "Series1"
+        Me.YVisualizationChart.Series.Add(Series1)
         Me.YVisualizationChart.Size = New System.Drawing.Size(1291, 323)
         Me.YVisualizationChart.TabIndex = 6
         Me.YVisualizationChart.Text = "Chart1"
@@ -332,17 +466,17 @@ Partial Class MainForm
         '
         'XVisualizationChart
         '
-        ChartArea6.Name = "ChartArea1"
-        Me.XVisualizationChart.ChartAreas.Add(ChartArea6)
+        ChartArea2.Name = "ChartArea1"
+        Me.XVisualizationChart.ChartAreas.Add(ChartArea2)
         Me.XVisualizationChart.Dock = System.Windows.Forms.DockStyle.Fill
-        Legend6.Name = "Legend1"
-        Me.XVisualizationChart.Legends.Add(Legend6)
+        Legend2.Name = "Legend1"
+        Me.XVisualizationChart.Legends.Add(Legend2)
         Me.XVisualizationChart.Location = New System.Drawing.Point(0, 0)
         Me.XVisualizationChart.Name = "XVisualizationChart"
-        Series6.ChartArea = "ChartArea1"
-        Series6.Legend = "Legend1"
-        Series6.Name = "Series1"
-        Me.XVisualizationChart.Series.Add(Series6)
+        Series2.ChartArea = "ChartArea1"
+        Series2.Legend = "Legend1"
+        Series2.Name = "Series1"
+        Me.XVisualizationChart.Series.Add(Series2)
         Me.XVisualizationChart.Size = New System.Drawing.Size(1291, 323)
         Me.XVisualizationChart.TabIndex = 5
         Me.XVisualizationChart.Text = "Chart1"
@@ -355,96 +489,13 @@ Partial Class MainForm
         '
         Me.bgWorkerY.WorkerSupportsCancellation = True
         '
-        'EarthquakeSelectionDGV
+        'bgWorkerCustomX
         '
-        Me.EarthquakeSelectionDGV.AllowUserToAddRows = False
-        Me.EarthquakeSelectionDGV.AllowUserToDeleteRows = False
-        Me.EarthquakeSelectionDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.EarthquakeSelectionDGV.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.EarthquakeNameColumn})
-        Me.EarthquakeSelectionDGV.Location = New System.Drawing.Point(6, 6)
-        Me.EarthquakeSelectionDGV.MultiSelect = False
-        Me.EarthquakeSelectionDGV.Name = "EarthquakeSelectionDGV"
-        Me.EarthquakeSelectionDGV.ReadOnly = True
-        Me.EarthquakeSelectionDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.EarthquakeSelectionDGV.Size = New System.Drawing.Size(259, 445)
-        Me.EarthquakeSelectionDGV.TabIndex = 0
+        Me.bgWorkerCustomX.WorkerSupportsCancellation = True
         '
-        'EarthquakeNameColumn
+        'bgWorkerCustomY
         '
-        Me.EarthquakeNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.EarthquakeNameColumn.HeaderText = "Earthquake"
-        Me.EarthquakeNameColumn.Name = "EarthquakeNameColumn"
-        Me.EarthquakeNameColumn.ReadOnly = True
-        '
-        'SimulationModeTabControl
-        '
-        Me.SimulationModeTabControl.Controls.Add(Me.EarthquakeSelectionTabPage)
-        Me.SimulationModeTabControl.Controls.Add(Me.SinusoidalSelectionTabPage)
-        Me.SimulationModeTabControl.Controls.Add(Me.CustomFileTabPage)
-        Me.SimulationModeTabControl.Location = New System.Drawing.Point(6, 6)
-        Me.SimulationModeTabControl.Name = "SimulationModeTabControl"
-        Me.SimulationModeTabControl.SelectedIndex = 0
-        Me.SimulationModeTabControl.Size = New System.Drawing.Size(279, 486)
-        Me.SimulationModeTabControl.TabIndex = 3
-        '
-        'EarthquakeSelectionTabPage
-        '
-        Me.EarthquakeSelectionTabPage.Controls.Add(Me.EarthquakeSelectionDGV)
-        Me.EarthquakeSelectionTabPage.Location = New System.Drawing.Point(4, 25)
-        Me.EarthquakeSelectionTabPage.Name = "EarthquakeSelectionTabPage"
-        Me.EarthquakeSelectionTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.EarthquakeSelectionTabPage.Size = New System.Drawing.Size(271, 457)
-        Me.EarthquakeSelectionTabPage.TabIndex = 0
-        Me.EarthquakeSelectionTabPage.Text = "Earthquake"
-        Me.EarthquakeSelectionTabPage.UseVisualStyleBackColor = True
-        '
-        'SinusoidalSelectionTabPage
-        '
-        Me.SinusoidalSelectionTabPage.Controls.Add(Me.SinusoidalSelectionDGV)
-        Me.SinusoidalSelectionTabPage.Location = New System.Drawing.Point(4, 25)
-        Me.SinusoidalSelectionTabPage.Name = "SinusoidalSelectionTabPage"
-        Me.SinusoidalSelectionTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.SinusoidalSelectionTabPage.Size = New System.Drawing.Size(271, 457)
-        Me.SinusoidalSelectionTabPage.TabIndex = 1
-        Me.SinusoidalSelectionTabPage.Text = "Sinusoidal"
-        Me.SinusoidalSelectionTabPage.UseVisualStyleBackColor = True
-        '
-        'CustomFileTabPage
-        '
-        Me.CustomFileTabPage.Location = New System.Drawing.Point(4, 25)
-        Me.CustomFileTabPage.Name = "CustomFileTabPage"
-        Me.CustomFileTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.CustomFileTabPage.Size = New System.Drawing.Size(271, 457)
-        Me.CustomFileTabPage.TabIndex = 2
-        Me.CustomFileTabPage.Text = "Custom"
-        Me.CustomFileTabPage.UseVisualStyleBackColor = True
-        '
-        'SinusoidalSelectionDGV
-        '
-        Me.SinusoidalSelectionDGV.AllowUserToAddRows = False
-        Me.SinusoidalSelectionDGV.AllowUserToDeleteRows = False
-        Me.SinusoidalSelectionDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.SinusoidalSelectionDGV.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.FrequencyColumn, Me.AmplitudeColumn})
-        Me.SinusoidalSelectionDGV.Location = New System.Drawing.Point(6, 6)
-        Me.SinusoidalSelectionDGV.MultiSelect = False
-        Me.SinusoidalSelectionDGV.Name = "SinusoidalSelectionDGV"
-        Me.SinusoidalSelectionDGV.ReadOnly = True
-        Me.SinusoidalSelectionDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.SinusoidalSelectionDGV.Size = New System.Drawing.Size(259, 445)
-        Me.SinusoidalSelectionDGV.TabIndex = 1
-        '
-        'FrequencyColumn
-        '
-        Me.FrequencyColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.FrequencyColumn.HeaderText = "Frequency"
-        Me.FrequencyColumn.Name = "FrequencyColumn"
-        Me.FrequencyColumn.ReadOnly = True
-        '
-        'AmplitudeColumn
-        '
-        Me.AmplitudeColumn.HeaderText = "Amplitude"
-        Me.AmplitudeColumn.Name = "AmplitudeColumn"
-        Me.AmplitudeColumn.ReadOnly = True
+        Me.bgWorkerCustomY.WorkerSupportsCancellation = True
         '
         'MainForm
         '
@@ -462,6 +513,13 @@ Partial Class MainForm
         Me.ArduinoGroupBox.ResumeLayout(False)
         Me.ArduinoGroupBox.PerformLayout()
         Me.SimulationTabPage.ResumeLayout(False)
+        Me.SimulationModeTabControl.ResumeLayout(False)
+        Me.EarthquakeSelectionTabPage.ResumeLayout(False)
+        CType(Me.EarthquakeSelectionDGV, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.SinusoidalSelectionTabPage.ResumeLayout(False)
+        CType(Me.SinusoidalSelectionDGV, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.CustomFileTabPage.ResumeLayout(False)
+        Me.CustomFileTabPage.PerformLayout()
         Me.EarthquakeSimulationControlsGroupBox.ResumeLayout(False)
         Me.SimulationVisualizerGroupBox.ResumeLayout(False)
         Me.YAxisVisualizationPanel.ResumeLayout(False)
@@ -470,11 +528,6 @@ Partial Class MainForm
         Me.XAxisVisualizationPanel.ResumeLayout(False)
         Me.XAxisVisualizationPanel.PerformLayout()
         CType(Me.XVisualizationChart, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.EarthquakeSelectionDGV, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.SimulationModeTabControl.ResumeLayout(False)
-        Me.EarthquakeSelectionTabPage.ResumeLayout(False)
-        Me.SinusoidalSelectionTabPage.ResumeLayout(False)
-        CType(Me.SinusoidalSelectionDGV, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -514,4 +567,10 @@ Partial Class MainForm
     Private WithEvents SinusoidalSelectionDGV As DataGridView
     Friend WithEvents FrequencyColumn As DataGridViewTextBoxColumn
     Friend WithEvents AmplitudeColumn As DataGridViewTextBoxColumn
+    Friend WithEvents CustomXAxisFileTextbox As TextBox
+    Friend WithEvents CustomYAxisButton As Button
+    Friend WithEvents CustomYAxisFileTextbox As TextBox
+    Friend WithEvents CustomXAxisButton As Button
+    Friend WithEvents bgWorkerCustomX As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bgWorkerCustomY As System.ComponentModel.BackgroundWorker
 End Class

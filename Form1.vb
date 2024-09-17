@@ -13,6 +13,13 @@ Public Class MainForm
     Public Property IsConnectedToXAxisCOM As Boolean = False
     Public Property IsConnectedToYAxisCOM As Boolean = False
 
+    Public Property CustomXAxisFilename As String
+    Public Property CustomYAxisFilename As String
+
+    Public Property GCodeXAxisList As List(Of String)
+
+    Public Property GCodeYAxisList As List(Of String)
+
 #End Region
 
 
@@ -167,37 +174,81 @@ Public Class MainForm
                     ElseIf SimulationModeTabControl.SelectedTab Is CustomFileTabPage Then
                         ' Custom tab selected
                         ' Add your custom simulation logic here
+                        If File.Exists(CustomXAxisFilename) Then
+                            Dim xValues = ReadAndDisplayCustomXData(GCodeXAxisList)
+
+                            If IsConnectedToXAxisCOM Then
+                                ' Send initial G-code commands
+                                XAxisSerialPort.WriteLine("$100 = 29.78")
+                                XAxisSerialPort.WriteLine("G90 G21 G94")
+
+                                ' Start BackgroundWorker to read file and write to serial port
+                                If Not bgWorkerCustomX.IsBusy Then
+                                    bgWorkerCustomX.RunWorkerAsync(GCodeXAxisList)
+                                End If
+                            Else
+                                MessageBox.Show("X axis COM port is not connected.")
+                            End If
+                        Else
+                            MessageBox.Show($"File {CustomXAxisFilename} not found.")
+                        End If
                     End If
 
 
                 Case YSimulationButton.Name
-                    ' Get the selected earthquake from the DataGridView
-                    If EarthquakeSelectionDGV.SelectedRows.Count > 0 Then
-                        Dim selectedEarthquake As String = EarthquakeSelectionDGV.SelectedRows(0).Cells(0).Value.ToString()
-                        Dim filePath As String = $"C:\Earthquakes\{selectedEarthquake}Y.txt"
-                        XVisualizationChart.Series.Clear()
-                        YVisualizationChart.Series.Clear()
+                    ' Check the selected tab
+                    If SimulationModeTabControl.SelectedTab Is EarthquakeSelectionTabPage Then
+                        If EarthquakeSelectionDGV.SelectedRows.Count > 0 Then
+                            Dim selectedEarthquake As String = EarthquakeSelectionDGV.SelectedRows(0).Cells(0).Value.ToString()
+                            Dim filePath As String = $"C:\Earthquakes\{selectedEarthquake}Y.txt"
+                            XVisualizationChart.Series.Clear()
+                            YVisualizationChart.Series.Clear()
 
-                        If File.Exists(filePath) Then
-                            ReadAndDisplayYData(filePath)
+                            If File.Exists(filePath) Then
+                                ReadAndDisplayYData(filePath)
+                                If IsConnectedToYAxisCOM Then
+                                    ' Send initial G-code commands
+                                    'YAxisSerialPort.WriteLine("$101 = 29.78")
+                                    YAxisSerialPort.WriteLine("G90 G21 G94")
+
+                                    ' Start BackgroundWorker to read file and write to serial port
+                                    If Not bgWorkerY.IsBusy Then
+                                        bgWorkerY.RunWorkerAsync(filePath)
+                                    End If
+                                Else
+                                    MessageBox.Show("Y axis COM port is not connected.")
+                                End If
+                            Else
+                                MessageBox.Show($"File {filePath} not found.")
+                            End If
+                        Else
+                            MessageBox.Show("Please select an earthquake.")
+                        End If
+
+                    ElseIf SimulationModeTabControl.SelectedTab Is CustomFileTabPage Then
+                        ' Custom tab selected
+                        ' Add your custom simulation logic here
+                        If File.Exists(CustomYAxisFilename) Then
+                            ReadAndDisplayCustomYData(GCodeYAxisList)
+
                             If IsConnectedToYAxisCOM Then
                                 ' Send initial G-code commands
-                                'YAxisSerialPort.WriteLine("$101 = 29.78")
+                                YAxisSerialPort.WriteLine("$101 = 29.78")
                                 YAxisSerialPort.WriteLine("G90 G21 G94")
 
                                 ' Start BackgroundWorker to read file and write to serial port
-                                If Not bgWorkerY.IsBusy Then
-                                    bgWorkerY.RunWorkerAsync(filePath)
+                                If Not bgWorkerCustomY.IsBusy Then
+                                    bgWorkerCustomY.RunWorkerAsync(GCodeYAxisList)
                                 End If
                             Else
                                 MessageBox.Show("Y axis COM port is not connected.")
                             End If
                         Else
-                            MessageBox.Show($"File {filePath} not found.")
+                            MessageBox.Show($"File {CustomYAxisFilename} not found.")
                         End If
-                    Else
-                        MessageBox.Show("Please select an earthquake.")
                     End If
+                    ' Get the selected earthquake from the DataGridView
+
 
                 Case XYSimulationButton.Name
                     XSimulationButton.PerformClick()
@@ -231,14 +282,27 @@ Public Class MainForm
                 Case StopSimulationButton.Name
                     ' Logic for StopSimulationButton click
                     ' Add logic to stop the simulation if running
-                    If bgWorkerX.IsBusy Then
-                        bgWorkerX.CancelAsync()
+
+                    If SimulationModeTabControl.SelectedTab Is EarthquakeSelectionTabPage Or SimulationModeTabControl.SelectedTab Is SinusoidalSelectionTabPage Then
+                        If bgWorkerX.IsBusy Then
+                            bgWorkerX.CancelAsync()
+                        End If
+
+                        If bgWorkerY.IsBusy Then
+                            bgWorkerY.CancelAsync()
+                        End If
+                    ElseIf SimulationModeTabControl.SelectedTab Is CustomFileTabPage Then
+                        If bgWorkerCustomX.IsBusy Then
+                            bgWorkerCustomX.CancelAsync()
+                        End If
+
+                        If bgWorkerCustomY.IsBusy Then
+                            bgWorkerCustomY.CancelAsync()
+                        End If
+
                     End If
 
-                    If bgWorkerY.IsBusy Then
-                        bgWorkerY.CancelAsync()
-                    End If
-                    'MessageBox.Show("Simulation stopped.")
+
 
                 Case Else
                     ' Do nothing
@@ -321,6 +385,87 @@ Public Class MainForm
         End If
     End Sub
 
+    Private Sub bgWorkerCustomX_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgWorkerCustomX.DoWork
+        Dim gcodeLines As List(Of String) = DirectCast(e.Argument, List(Of String))
+        Try
+            For Each line As String In gcodeLines
+                ' Check if the background worker is being cancelled
+                If bgWorkerCustomX.CancellationPending Then
+                    e.Cancel = True
+                    Exit For
+                Else
+                    ' Simulate reading from the serial port (or just check for the "ok" response)
+                    Dim readbuffer As String = XAxisSerialPort.ReadLine()
+                    If readbuffer.IndexOf("ok") >= 0 Then
+                        ' Use Invoke to update the TextBox on the UI thread
+                        Me.Invoke(Sub()
+                                      TextBox1.AppendText(line & vbNewLine) ' Updates the TextBox safely
+                                  End Sub)
+
+                        ' Send the G-code line to the Arduino
+                        XAxisSerialPort.WriteLine(line)
+
+                        ' Wait for 10 milliseconds (simulate time interval)
+                        'Threading.Thread.Sleep(10)
+                    End If
+                End If
+            Next
+        Catch ex As Exception
+            MessageBox.Show("Error during simulation: " & ex.Message)
+        End Try
+    End Sub
+
+    Private Sub bgWorkerCustomX_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles bgWorkerCustomX.RunWorkerCompleted
+        If e.Cancelled Then
+            MessageBox.Show("Simulation was stopped.")
+        ElseIf e.Error IsNot Nothing Then
+            MessageBox.Show("Error: " & e.Error.Message)
+        Else
+            MessageBox.Show("Simulation completed successfully.")
+        End If
+    End Sub
+
+    Private Sub bgWorkerCustomY_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgWorkerCustomY.DoWork
+        Dim gcodeLines As List(Of String) = DirectCast(e.Argument, List(Of String))
+        Try
+            For Each line As String In gcodeLines
+                ' Check if the background worker is being cancelled
+                If bgWorkerCustomY.CancellationPending Then
+                    e.Cancel = True
+                    Exit For
+                Else
+                    ' Simulate reading from the serial port (or just check for the "ok" response)
+                    Dim readbuffer As String = YAxisSerialPort.ReadLine()
+                    If readbuffer.IndexOf("ok") >= 0 Then
+                        ' Use Invoke to update the TextBox on the UI thread
+                        Me.Invoke(Sub()
+                                      TextBox2.AppendText(line & vbNewLine) ' Updates the TextBox safely
+                                  End Sub)
+
+                        ' Send the G-code line to the Arduino
+                        YAxisSerialPort.WriteLine(line)
+
+                        ' Wait for 10 milliseconds (simulate time interval)
+                        'Threading.Thread.Sleep(1)
+                    End If
+                End If
+            Next
+        Catch ex As Exception
+            MessageBox.Show("Error during simulation: " & ex.Message)
+        End Try
+    End Sub
+
+    Private Sub bgWorkerCustomY_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles bgWorkerCustomY.RunWorkerCompleted
+        If e.Cancelled Then
+            MessageBox.Show("Simulation was stopped.")
+        ElseIf e.Error IsNot Nothing Then
+            MessageBox.Show("Error: " & e.Error.Message)
+        Else
+            MessageBox.Show("Simulation completed successfully.")
+        End If
+    End Sub
+
+
     Private Sub SimulationModeTabControl_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SimulationModeTabControl.SelectedIndexChanged
 
         If SimulationModeTabControl.SelectedTab Is SinusoidalSelectionTabPage Then
@@ -329,6 +474,44 @@ Public Class MainForm
         ElseIf SimulationModeTabControl.SelectedTab Is CustomFileTabPage Or SimulationModeTabControl.SelectedTab Is EarthquakeSelectionTabPage Then
             XYSimulationButton.Enabled = True
             YSimulationButton.Enabled = True
+        End If
+    End Sub
+
+    Private Sub CustomXAxisButton_Click(sender As Object, e As EventArgs) Handles CustomXAxisButton.Click
+        MessageBox.Show("Please select a file containing acceleration data.", "Select Acceleration Data", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+        Dim openFileDialog As New OpenFileDialog()
+        openFileDialog.Filter = "Text Files (*.txt)|*.txt|Data Files (*.dat)|*.dat|All Files (*.*)|*.*"
+
+        If openFileDialog.ShowDialog() = DialogResult.OK Then
+            CustomXAxisFilename = openFileDialog.FileName
+
+
+            GCodeXAxisList = ConvertToXAxisGCode(CustomXAxisFilename)
+
+            ' Get only the filename and add it to the RecordingTitleListBox
+            CustomXAxisFileTextbox.Clear()
+            Dim fileName As String = Path.GetFileName(CustomXAxisFilename)
+            CustomXAxisFileTextbox.Text = fileName
+        End If
+    End Sub
+    Private Sub CustomYAxisButton_Click(sender As Object, e As EventArgs) Handles CustomYAxisButton.Click
+        MessageBox.Show("Please select a file containing acceleration data.", "Select Acceleration Data", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+
+        Dim openFileDialog As New OpenFileDialog()
+        openFileDialog.Filter = "Text Files (*.txt)|*.txt|Data Files (*.dat)|*.dat|All Files (*.*)|*.*"
+
+        If openFileDialog.ShowDialog() = DialogResult.OK Then
+            CustomYAxisFilename = openFileDialog.FileName
+
+
+            GCodeYAxisList = ConvertToYAxisGCode(CustomYAxisFilename)
+
+            ' Get only the filename and add it to the RecordingTitleListBox
+            CustomYAxisFileTextbox.Clear()
+            Dim fileName As String = Path.GetFileName(CustomYAxisFilename)
+            CustomYAxisFileTextbox.Text = fileName
         End If
     End Sub
 
@@ -486,7 +669,235 @@ Public Class MainForm
             MessageBox.Show("Error reading the file: " & ex.Message)
         End Try
     End Sub
-#End Region
 
+    Private Function ReadAndDisplayCustomXData(dataLines As List(Of String)) As List(Of Double)
+        ' Clear previous chart data
+        XVisualizationChart.Series.Clear()
+
+        ' Create a new series for the chart
+        Dim series As New Series("X Motion Data")
+        series.ChartType = SeriesChartType.FastLine
+        XVisualizationChart.Series.Add(series)
+
+        Dim xValues As New List(Of Double)
+
+        Try
+            ' Loop through each line in the list
+            For Each line As String In dataLines
+                ' Split the line by spaces
+                Dim parts As String() = line.Split(" "c)
+
+                ' Check if the line has at least 3 parts
+                If parts.Length >= 3 Then
+                    ' Extract the middle value (F) and subtract 200
+                    Dim xValue As Double = Double.Parse(parts(1)) - 200
+
+                    ' Add the calculated value to the chart
+                    series.Points.AddY(xValue)
+
+                    xValues.Add(xValue)
+                End If
+            Next
+        Catch ex As Exception
+            MessageBox.Show("Error processing the data: " & ex.Message)
+        End Try
+
+        Return xValues
+    End Function
+
+    Private Sub ReadAndDisplayCustomYData(dataLines As List(Of String))
+        ' Clear previous chart data
+        YVisualizationChart.Series.Clear()
+
+        ' Create a new series for the chart
+        Dim series As New Series("Y Motion Data")
+        series.ChartType = SeriesChartType.FastLine
+        YVisualizationChart.Series.Add(series)
+
+        Try
+            ' Loop through each line in the provided list
+            For Each line As String In dataLines
+                ' Split the line by spaces
+                Dim parts As String() = line.Split(" "c)
+
+                ' Check if the line has at least 3 parts
+                If parts.Length >= 3 Then
+                    ' Extract the middle value (F) and subtract 360
+                    Dim yValue As Double = Double.Parse(parts(1)) - 360
+
+                    ' Add the calculated value to the chart
+                    series.Points.AddY(yValue)
+                End If
+            Next
+        Catch ex As Exception
+            MessageBox.Show("Error processing the data: " & ex.Message)
+        End Try
+    End Sub
+
+
+    Function ConvertToXAxisGCode(filePath As String) As List(Of String)
+        Dim lines() As String
+        Dim gCodeList As New List(Of String)
+
+        Try
+            lines = IO.File.ReadAllLines(filePath)
+
+            ' Check if the file has enough lines to process
+            If lines.Length < 12 Then
+                Throw New FormatException("File does not contain enough data to process.")
+            End If
+
+            Dim velocity As Double = 0
+            Dim displacement As Double = 0
+            Dim timeStep As Double = 0.01 ' Time step in seconds (10 ms)
+
+            ' Constants for G-code format
+            Dim baseX As Double = 200
+
+            ' Start reading data from the file (skip header lines)
+            For i As Integer = 10 To lines.Length - 2
+                ' Split the data
+                Dim currentLine As String() = lines(i).Split(vbTab)
+                Dim nextLine As String() = lines(i + 1).Split(vbTab)
+
+                ' Validate the format of each line
+                If currentLine.Length < 2 OrElse nextLine.Length < 2 Then
+                    Throw New FormatException("Data format is incorrect in the file.")
+                End If
+
+                Dim currentTime As Double
+                Dim currentAccel As Double
+                Dim nextAccel As Double
+
+                ' Try parsing the time and acceleration values
+                If Not Double.TryParse(currentLine(0), currentTime) OrElse
+               Not Double.TryParse(currentLine(1), currentAccel) OrElse
+               Not Double.TryParse(nextLine(1), nextAccel) Then
+                    Throw New FormatException("Unable to parse time or acceleration data.")
+                End If
+
+                currentAccel *= 9.80665 ' Convert g to m/s²
+                nextAccel *= 9.80665
+
+                ' Calculate the change in velocity using the provided formula
+                Dim dV As Double = 0.5 * (currentAccel + nextAccel) * timeStep
+
+                Dim m_to_mm As Integer = 1000
+
+                velocity += dV * m_to_mm
+
+                Dim dD As Double = (velocity + (velocity - dV)) * (timeStep / 2)
+
+                displacement += dD
+
+                ' Calculate velocity in mm/min for G-code
+                Dim velocityMMMin As Double = velocity * 60 ' Convert m/s to mm/min
+
+                ' Generate G-code
+                Dim gCodeLine As String = String.Format("G01X {0:F2} F{1:F2}", baseX + displacement, Math.Abs(velocityMMMin))
+                gCodeList.Add(gCodeLine)
+            Next
+
+        Catch ex As FormatException
+            ' Handle format exception (e.g., log the error, show a message, etc.)
+            MessageBox.Show("Error processing the file: " & ex.Message, "Format Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            CustomXAxisFileTextbox.Clear()
+            CustomXAxisFilename = ""
+            Return New List(Of String)() ' Return an empty list to indicate failure
+        Catch ex As Exception
+            ' Handle any other unexpected errors
+            MessageBox.Show("An unexpected error occurred: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            CustomXAxisFileTextbox.Clear()
+            CustomXAxisFilename = ""
+            Return New List(Of String)() ' Return an empty list to indicate failure
+        End Try
+
+        Return gCodeList
+    End Function
+
+    Function ConvertToYAxisGCode(filePath As String) As List(Of String)
+        Dim lines() As String
+        Dim gCodeList As New List(Of String)
+
+        Try
+            lines = IO.File.ReadAllLines(filePath)
+
+            ' Check if the file has enough lines to process
+            If lines.Length < 12 Then
+                Throw New FormatException("File does not contain enough data to process.")
+            End If
+
+            Dim velocity As Double = 0
+            Dim displacement As Double = 0
+            Dim timeStep As Double = 0.01 ' Time step in seconds (10 ms)
+
+            ' Constants for G-code format
+            Dim baseX As Double = 360
+
+            ' Start reading data from the file (skip header lines)
+            For i As Integer = 10 To lines.Length - 2
+                ' Split the data
+                Dim currentLine As String() = lines(i).Split(vbTab)
+                Dim nextLine As String() = lines(i + 1).Split(vbTab)
+
+                ' Validate the format of each line
+                If currentLine.Length < 2 OrElse nextLine.Length < 2 Then
+                    Throw New FormatException("Data format is incorrect in the file.")
+                End If
+
+                Dim currentTime As Double
+                Dim currentAccel As Double
+                Dim nextAccel As Double
+
+                ' Try parsing the time and acceleration values
+                If Not Double.TryParse(currentLine(0), currentTime) OrElse
+                   Not Double.TryParse(currentLine(1), currentAccel) OrElse
+                   Not Double.TryParse(nextLine(1), nextAccel) Then
+                    Throw New FormatException("Unable to parse time or acceleration data.")
+                End If
+
+                currentAccel *= 9.80665 ' Convert g to m/s²
+                nextAccel *= 9.80665
+
+                ' Calculate the change in velocity using the provided formula
+                Dim dV As Double = 0.5 * (currentAccel + nextAccel) * timeStep
+
+                Dim m_to_mm As Integer = 1000
+
+                velocity += dV * m_to_mm
+
+                Dim dD As Double = (velocity + (velocity - dV)) * (timeStep / 2)
+
+                displacement += dD
+
+                ' Calculate velocity in mm/min for G-code
+                Dim velocityMMMin As Double = velocity * 60 ' Convert m/s to mm/min
+
+                ' Generate G-code
+                Dim gCodeLine As String = String.Format("G01Y {0:F2} F{1:F2}", baseX + displacement, Math.Abs(velocityMMMin))
+                gCodeList.Add(gCodeLine)
+            Next
+
+        Catch ex As FormatException
+            ' Handle format exception (e.g., log the error, show a message, etc.)
+            MessageBox.Show("Error processing the file: " & ex.Message, "Format Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            CustomYAxisFileTextbox.Clear()
+            CustomYAxisFilename = ""
+            Return New List(Of String)() ' Return an empty list to indicate failure
+        Catch ex As Exception
+            ' Handle any other unexpected errors
+            MessageBox.Show("An unexpected error occurred: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            CustomYAxisFileTextbox.Clear()
+            CustomYAxisFilename = ""
+            Return New List(Of String)() ' Return an empty list to indicate failure
+        End Try
+
+        Return gCodeList
+    End Function
+
+
+
+
+#End Region
 
 End Class
