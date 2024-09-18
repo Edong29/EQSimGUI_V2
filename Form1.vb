@@ -20,6 +20,8 @@ Public Class MainForm
 
     Public Property GCodeYAxisList As List(Of String)
 
+    Public Property EarthquakeImagesFilePath As String = $"C:\Earthquakes\Images\"
+
 #End Region
 
 
@@ -515,6 +517,45 @@ Public Class MainForm
         End If
     End Sub
 
+    ' When the mouse enters a DataGridView cell
+    Private Sub EarthquakeSelectionDGV_CellMouseEnter(sender As Object, e As DataGridViewCellEventArgs) Handles EarthquakeSelectionDGV.CellMouseEnter
+        ' Ensure the mouse is over a valid cell (not a header row or out of bounds)
+        If e.RowIndex >= 0 And e.ColumnIndex >= 0 Then
+            Dim cellValue As String = EarthquakeSelectionDGV.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()
+
+            ' Define the file path for the image based on the cell value
+            Dim imagePath As String = EarthquakeImagesFilePath & cellValue & ".png"
+
+            ' Check if the image file exists before attempting to load it
+            If System.IO.File.Exists(imagePath) Then
+                ' Load the image from file
+                Dim image As Image = Image.FromFile(imagePath)
+
+                ' Scale the PictureBox size down by dividing image dimensions by 2
+                PictureBox1.Width = image.Width \ 2 ' Use integer division (or you can use / for float division)
+                PictureBox1.Height = image.Height \ 2
+
+                ' Load the image into the PictureBox
+                PictureBox1.Image = image
+                PictureBox1.Visible = True
+
+                ' Adjust the PictureBox location near the cursor (optional)
+                'PictureBox1.Location = New Point(Cursor.Position.X - Me.Left - 10, Cursor.Position.Y - Me.Top - 10)
+
+                ' Optional: Set the PictureBox SizeMode to control how the image is displayed (Zoom will maintain aspect ratio)
+                PictureBox1.SizeMode = PictureBoxSizeMode.Zoom ' Ensure the image scales well inside the PictureBox
+            Else
+                ' If the image doesn't exist, hide the PictureBox
+                PictureBox1.Visible = False
+            End If
+        End If
+    End Sub
+
+    ' Hide the PictureBox when the mouse leaves the cell
+    Private Sub EarthquakeSelectionDGV_CellMouseLeave(sender As Object, e As DataGridViewCellEventArgs) Handles EarthquakeSelectionDGV.CellMouseLeave
+        PictureBox1.Visible = False
+    End Sub
+
 #End Region
 
 #Region "Functions"
@@ -896,7 +937,11 @@ Public Class MainForm
     End Function
 
 
-
+    Private Sub InitializeEarthquakePictureBox()
+        PictureBox1.Visible = False
+        ' Optional: Set SizeMode to adjust image display style
+        PictureBox1.SizeMode = PictureBoxSizeMode.Zoom
+    End Sub
 
 #End Region
 

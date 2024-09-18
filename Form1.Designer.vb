@@ -22,13 +22,14 @@ Partial Class MainForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim ChartArea1 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
-        Dim Legend1 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
-        Dim Series1 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
-        Dim ChartArea2 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
-        Dim Legend2 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
-        Dim Series2 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
+        Dim ChartArea8 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
+        Dim Legend8 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
+        Dim Series8 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
+        Dim ChartArea7 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
+        Dim Legend7 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
+        Dim Series7 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
         Me.MainPanel = New System.Windows.Forms.Panel()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.TitleLabel = New System.Windows.Forms.Label()
         Me.GUITabControl = New System.Windows.Forms.TabControl()
         Me.InitializationTabPage = New System.Windows.Forms.TabPage()
@@ -71,6 +72,7 @@ Partial Class MainForm
         Me.bgWorkerCustomX = New System.ComponentModel.BackgroundWorker()
         Me.bgWorkerCustomY = New System.ComponentModel.BackgroundWorker()
         Me.MainPanel.SuspendLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GUITabControl.SuspendLayout()
         Me.InitializationTabPage.SuspendLayout()
         Me.ArduinoGroupBox.SuspendLayout()
@@ -96,6 +98,15 @@ Partial Class MainForm
         Me.MainPanel.Name = "MainPanel"
         Me.MainPanel.Size = New System.Drawing.Size(1608, 100)
         Me.MainPanel.TabIndex = 2
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.Location = New System.Drawing.Point(3, 0)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(100, 50)
+        Me.PictureBox1.TabIndex = 1
+        Me.PictureBox1.TabStop = False
+        Me.PictureBox1.Visible = False
         '
         'TitleLabel
         '
@@ -430,23 +441,24 @@ Partial Class MainForm
         '
         'YVisualizationChart
         '
-        ChartArea1.Name = "ChartArea1"
-        Me.YVisualizationChart.ChartAreas.Add(ChartArea1)
+        ChartArea8.Name = "ChartArea1"
+        Me.YVisualizationChart.ChartAreas.Add(ChartArea8)
         Me.YVisualizationChart.Dock = System.Windows.Forms.DockStyle.Fill
-        Legend1.Name = "Legend1"
-        Me.YVisualizationChart.Legends.Add(Legend1)
+        Legend8.Name = "Legend1"
+        Me.YVisualizationChart.Legends.Add(Legend8)
         Me.YVisualizationChart.Location = New System.Drawing.Point(0, 0)
         Me.YVisualizationChart.Name = "YVisualizationChart"
-        Series1.ChartArea = "ChartArea1"
-        Series1.Legend = "Legend1"
-        Series1.Name = "Series1"
-        Me.YVisualizationChart.Series.Add(Series1)
+        Series8.ChartArea = "ChartArea1"
+        Series8.Legend = "Legend1"
+        Series8.Name = "Series1"
+        Me.YVisualizationChart.Series.Add(Series8)
         Me.YVisualizationChart.Size = New System.Drawing.Size(1291, 323)
         Me.YVisualizationChart.TabIndex = 6
         Me.YVisualizationChart.Text = "Chart1"
         '
         'XAxisVisualizationPanel
         '
+        Me.XAxisVisualizationPanel.Controls.Add(Me.PictureBox1)
         Me.XAxisVisualizationPanel.Controls.Add(Me.TextBox1)
         Me.XAxisVisualizationPanel.Controls.Add(Me.XVisualizationChart)
         Me.XAxisVisualizationPanel.Location = New System.Drawing.Point(6, 21)
@@ -466,17 +478,17 @@ Partial Class MainForm
         '
         'XVisualizationChart
         '
-        ChartArea2.Name = "ChartArea1"
-        Me.XVisualizationChart.ChartAreas.Add(ChartArea2)
+        ChartArea7.Name = "ChartArea1"
+        Me.XVisualizationChart.ChartAreas.Add(ChartArea7)
         Me.XVisualizationChart.Dock = System.Windows.Forms.DockStyle.Fill
-        Legend2.Name = "Legend1"
-        Me.XVisualizationChart.Legends.Add(Legend2)
+        Legend7.Name = "Legend1"
+        Me.XVisualizationChart.Legends.Add(Legend7)
         Me.XVisualizationChart.Location = New System.Drawing.Point(0, 0)
         Me.XVisualizationChart.Name = "XVisualizationChart"
-        Series2.ChartArea = "ChartArea1"
-        Series2.Legend = "Legend1"
-        Series2.Name = "Series1"
-        Me.XVisualizationChart.Series.Add(Series2)
+        Series7.ChartArea = "ChartArea1"
+        Series7.Legend = "Legend1"
+        Series7.Name = "Series1"
+        Me.XVisualizationChart.Series.Add(Series7)
         Me.XVisualizationChart.Size = New System.Drawing.Size(1291, 323)
         Me.XVisualizationChart.TabIndex = 5
         Me.XVisualizationChart.Text = "Chart1"
@@ -508,6 +520,7 @@ Partial Class MainForm
         Me.Text = "Earthquake Simulator V2"
         Me.MainPanel.ResumeLayout(False)
         Me.MainPanel.PerformLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GUITabControl.ResumeLayout(False)
         Me.InitializationTabPage.ResumeLayout(False)
         Me.ArduinoGroupBox.ResumeLayout(False)
@@ -573,4 +586,5 @@ Partial Class MainForm
     Friend WithEvents CustomXAxisButton As Button
     Friend WithEvents bgWorkerCustomX As System.ComponentModel.BackgroundWorker
     Friend WithEvents bgWorkerCustomY As System.ComponentModel.BackgroundWorker
+    Friend WithEvents PictureBox1 As PictureBox
 End Class
