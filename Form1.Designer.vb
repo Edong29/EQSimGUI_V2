@@ -22,15 +22,15 @@ Partial Class MainForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim ChartArea8 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
-        Dim Legend8 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
-        Dim Series8 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
         Dim ChartArea7 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
         Dim Legend7 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
         Dim Series7 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
+        Dim ChartArea8 As System.Windows.Forms.DataVisualization.Charting.ChartArea = New System.Windows.Forms.DataVisualization.Charting.ChartArea()
+        Dim Legend8 As System.Windows.Forms.DataVisualization.Charting.Legend = New System.Windows.Forms.DataVisualization.Charting.Legend()
+        Dim Series8 As System.Windows.Forms.DataVisualization.Charting.Series = New System.Windows.Forms.DataVisualization.Charting.Series()
         Me.MainPanel = New System.Windows.Forms.Panel()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.TitleLabel = New System.Windows.Forms.Label()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.GUITabControl = New System.Windows.Forms.TabControl()
         Me.InitializationTabPage = New System.Windows.Forms.TabPage()
         Me.ArduinoGroupBox = New System.Windows.Forms.GroupBox()
@@ -71,6 +71,12 @@ Partial Class MainForm
         Me.bgWorkerY = New System.ComponentModel.BackgroundWorker()
         Me.bgWorkerCustomX = New System.ComponentModel.BackgroundWorker()
         Me.bgWorkerCustomY = New System.ComponentModel.BackgroundWorker()
+        Me.FrequencyNumericUpDown = New System.Windows.Forms.NumericUpDown()
+        Me.AmplitudeNumericUpDown = New System.Windows.Forms.NumericUpDown()
+        Me.FrequencyLabel = New System.Windows.Forms.Label()
+        Me.AmplitudeLabel = New System.Windows.Forms.Label()
+        Me.DurationLabel = New System.Windows.Forms.Label()
+        Me.DurationNumericUpDown = New System.Windows.Forms.NumericUpDown()
         Me.MainPanel.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GUITabControl.SuspendLayout()
@@ -89,6 +95,9 @@ Partial Class MainForm
         CType(Me.YVisualizationChart, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.XAxisVisualizationPanel.SuspendLayout()
         CType(Me.XVisualizationChart, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.FrequencyNumericUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.AmplitudeNumericUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DurationNumericUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MainPanel
@@ -98,15 +107,6 @@ Partial Class MainForm
         Me.MainPanel.Name = "MainPanel"
         Me.MainPanel.Size = New System.Drawing.Size(1608, 100)
         Me.MainPanel.TabIndex = 2
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.Location = New System.Drawing.Point(3, 0)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(100, 50)
-        Me.PictureBox1.TabIndex = 1
-        Me.PictureBox1.TabStop = False
-        Me.PictureBox1.Visible = False
         '
         'TitleLabel
         '
@@ -118,6 +118,15 @@ Partial Class MainForm
         Me.TitleLabel.Size = New System.Drawing.Size(993, 73)
         Me.TitleLabel.TabIndex = 0
         Me.TitleLabel.Text = "STRONG MOTION SIMULATOR"
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.Location = New System.Drawing.Point(3, 0)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(100, 50)
+        Me.PictureBox1.TabIndex = 1
+        Me.PictureBox1.TabStop = False
+        Me.PictureBox1.Visible = False
         '
         'GUITabControl
         '
@@ -268,6 +277,12 @@ Partial Class MainForm
         '
         'SinusoidalSelectionTabPage
         '
+        Me.SinusoidalSelectionTabPage.Controls.Add(Me.DurationLabel)
+        Me.SinusoidalSelectionTabPage.Controls.Add(Me.DurationNumericUpDown)
+        Me.SinusoidalSelectionTabPage.Controls.Add(Me.AmplitudeLabel)
+        Me.SinusoidalSelectionTabPage.Controls.Add(Me.FrequencyLabel)
+        Me.SinusoidalSelectionTabPage.Controls.Add(Me.AmplitudeNumericUpDown)
+        Me.SinusoidalSelectionTabPage.Controls.Add(Me.FrequencyNumericUpDown)
         Me.SinusoidalSelectionTabPage.Controls.Add(Me.SinusoidalSelectionDGV)
         Me.SinusoidalSelectionTabPage.Location = New System.Drawing.Point(4, 25)
         Me.SinusoidalSelectionTabPage.Name = "SinusoidalSelectionTabPage"
@@ -288,8 +303,9 @@ Partial Class MainForm
         Me.SinusoidalSelectionDGV.Name = "SinusoidalSelectionDGV"
         Me.SinusoidalSelectionDGV.ReadOnly = True
         Me.SinusoidalSelectionDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.SinusoidalSelectionDGV.Size = New System.Drawing.Size(259, 445)
+        Me.SinusoidalSelectionDGV.Size = New System.Drawing.Size(259, 272)
         Me.SinusoidalSelectionDGV.TabIndex = 1
+        Me.SinusoidalSelectionDGV.Visible = False
         '
         'FrequencyColumn
         '
@@ -441,17 +457,17 @@ Partial Class MainForm
         '
         'YVisualizationChart
         '
-        ChartArea8.Name = "ChartArea1"
-        Me.YVisualizationChart.ChartAreas.Add(ChartArea8)
+        ChartArea7.Name = "ChartArea1"
+        Me.YVisualizationChart.ChartAreas.Add(ChartArea7)
         Me.YVisualizationChart.Dock = System.Windows.Forms.DockStyle.Fill
-        Legend8.Name = "Legend1"
-        Me.YVisualizationChart.Legends.Add(Legend8)
+        Legend7.Name = "Legend1"
+        Me.YVisualizationChart.Legends.Add(Legend7)
         Me.YVisualizationChart.Location = New System.Drawing.Point(0, 0)
         Me.YVisualizationChart.Name = "YVisualizationChart"
-        Series8.ChartArea = "ChartArea1"
-        Series8.Legend = "Legend1"
-        Series8.Name = "Series1"
-        Me.YVisualizationChart.Series.Add(Series8)
+        Series7.ChartArea = "ChartArea1"
+        Series7.Legend = "Legend1"
+        Series7.Name = "Series1"
+        Me.YVisualizationChart.Series.Add(Series7)
         Me.YVisualizationChart.Size = New System.Drawing.Size(1291, 323)
         Me.YVisualizationChart.TabIndex = 6
         Me.YVisualizationChart.Text = "Chart1"
@@ -478,17 +494,17 @@ Partial Class MainForm
         '
         'XVisualizationChart
         '
-        ChartArea7.Name = "ChartArea1"
-        Me.XVisualizationChart.ChartAreas.Add(ChartArea7)
+        ChartArea8.Name = "ChartArea1"
+        Me.XVisualizationChart.ChartAreas.Add(ChartArea8)
         Me.XVisualizationChart.Dock = System.Windows.Forms.DockStyle.Fill
-        Legend7.Name = "Legend1"
-        Me.XVisualizationChart.Legends.Add(Legend7)
+        Legend8.Name = "Legend1"
+        Me.XVisualizationChart.Legends.Add(Legend8)
         Me.XVisualizationChart.Location = New System.Drawing.Point(0, 0)
         Me.XVisualizationChart.Name = "XVisualizationChart"
-        Series7.ChartArea = "ChartArea1"
-        Series7.Legend = "Legend1"
-        Series7.Name = "Series1"
-        Me.XVisualizationChart.Series.Add(Series7)
+        Series8.ChartArea = "ChartArea1"
+        Series8.Legend = "Legend1"
+        Series8.Name = "Series1"
+        Me.XVisualizationChart.Series.Add(Series8)
         Me.XVisualizationChart.Size = New System.Drawing.Size(1291, 323)
         Me.XVisualizationChart.TabIndex = 5
         Me.XVisualizationChart.Text = "Chart1"
@@ -508,6 +524,58 @@ Partial Class MainForm
         'bgWorkerCustomY
         '
         Me.bgWorkerCustomY.WorkerSupportsCancellation = True
+        '
+        'FrequencyNumericUpDown
+        '
+        Me.FrequencyNumericUpDown.DecimalPlaces = 1
+        Me.FrequencyNumericUpDown.Increment = New Decimal(New Integer() {5, 0, 0, 65536})
+        Me.FrequencyNumericUpDown.Location = New System.Drawing.Point(6, 300)
+        Me.FrequencyNumericUpDown.Name = "FrequencyNumericUpDown"
+        Me.FrequencyNumericUpDown.Size = New System.Drawing.Size(120, 22)
+        Me.FrequencyNumericUpDown.TabIndex = 2
+        '
+        'AmplitudeNumericUpDown
+        '
+        Me.AmplitudeNumericUpDown.DecimalPlaces = 1
+        Me.AmplitudeNumericUpDown.Increment = New Decimal(New Integer() {5, 0, 0, 65536})
+        Me.AmplitudeNumericUpDown.Location = New System.Drawing.Point(6, 344)
+        Me.AmplitudeNumericUpDown.Name = "AmplitudeNumericUpDown"
+        Me.AmplitudeNumericUpDown.Size = New System.Drawing.Size(120, 22)
+        Me.AmplitudeNumericUpDown.TabIndex = 3
+        '
+        'FrequencyLabel
+        '
+        Me.FrequencyLabel.AutoSize = True
+        Me.FrequencyLabel.Location = New System.Drawing.Point(6, 281)
+        Me.FrequencyLabel.Name = "FrequencyLabel"
+        Me.FrequencyLabel.Size = New System.Drawing.Size(101, 16)
+        Me.FrequencyLabel.TabIndex = 4
+        Me.FrequencyLabel.Text = "Frequency (Hz):"
+        '
+        'AmplitudeLabel
+        '
+        Me.AmplitudeLabel.AutoSize = True
+        Me.AmplitudeLabel.Location = New System.Drawing.Point(6, 325)
+        Me.AmplitudeLabel.Name = "AmplitudeLabel"
+        Me.AmplitudeLabel.Size = New System.Drawing.Size(103, 16)
+        Me.AmplitudeLabel.TabIndex = 5
+        Me.AmplitudeLabel.Text = "Amplitude (mm):"
+        '
+        'DurationLabel
+        '
+        Me.DurationLabel.AutoSize = True
+        Me.DurationLabel.Location = New System.Drawing.Point(6, 369)
+        Me.DurationLabel.Name = "DurationLabel"
+        Me.DurationLabel.Size = New System.Drawing.Size(78, 16)
+        Me.DurationLabel.TabIndex = 7
+        Me.DurationLabel.Text = "Duration (s):"
+        '
+        'DurationNumericUpDown
+        '
+        Me.DurationNumericUpDown.Location = New System.Drawing.Point(6, 388)
+        Me.DurationNumericUpDown.Name = "DurationNumericUpDown"
+        Me.DurationNumericUpDown.Size = New System.Drawing.Size(120, 22)
+        Me.DurationNumericUpDown.TabIndex = 6
         '
         'MainForm
         '
@@ -530,6 +598,7 @@ Partial Class MainForm
         Me.EarthquakeSelectionTabPage.ResumeLayout(False)
         CType(Me.EarthquakeSelectionDGV, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SinusoidalSelectionTabPage.ResumeLayout(False)
+        Me.SinusoidalSelectionTabPage.PerformLayout()
         CType(Me.SinusoidalSelectionDGV, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CustomFileTabPage.ResumeLayout(False)
         Me.CustomFileTabPage.PerformLayout()
@@ -541,6 +610,9 @@ Partial Class MainForm
         Me.XAxisVisualizationPanel.ResumeLayout(False)
         Me.XAxisVisualizationPanel.PerformLayout()
         CType(Me.XVisualizationChart, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.FrequencyNumericUpDown, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.AmplitudeNumericUpDown, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DurationNumericUpDown, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -587,4 +659,10 @@ Partial Class MainForm
     Friend WithEvents bgWorkerCustomX As System.ComponentModel.BackgroundWorker
     Friend WithEvents bgWorkerCustomY As System.ComponentModel.BackgroundWorker
     Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents AmplitudeNumericUpDown As NumericUpDown
+    Friend WithEvents FrequencyNumericUpDown As NumericUpDown
+    Friend WithEvents AmplitudeLabel As Label
+    Friend WithEvents FrequencyLabel As Label
+    Friend WithEvents DurationLabel As Label
+    Friend WithEvents DurationNumericUpDown As NumericUpDown
 End Class

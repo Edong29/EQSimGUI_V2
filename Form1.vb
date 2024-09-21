@@ -134,43 +134,75 @@ Public Class MainForm
                             MessageBox.Show("Please select an earthquake.")
                         End If
 
+                        'ElseIf SimulationModeTabControl.SelectedTab Is SinusoidalSelectionTabPage Then
+                        '    ' Sinusoidal tab selected
+                        '    If SinusoidalSelectionDGV.SelectedRows.Count > 0 Then
+                        '        Dim frequency As String = SinusoidalSelectionDGV.SelectedRows(0).Cells(0).Value.ToString()
+                        '        Dim amplitude As String = SinusoidalSelectionDGV.SelectedRows(0).Cells(1).Value.ToString()
+                        '        Dim filePath As String = $"C:\Earthquakes\Frequencies\{frequency} {amplitude}.txt"
+                        '        XVisualizationChart.Series.Clear()
+                        '        YVisualizationChart.Series.Clear()
+
+                        '        If File.Exists(filePath) Then
+                        '            Dim xValues = ReadAndDisplayXData(filePath)
+                        '            ' Assuming data is loaded into a list or array called "amplitudeData"
+                        '            Dim maxAmplitude As Double = xValues.Max()
+                        '            Dim minAmplitude As Double = xValues.Min()
+
+                        '            ' Update the chart's Y-axis
+                        '            XVisualizationChart.ChartAreas(0).AxisY.Maximum = maxAmplitude + 2 ' Add some padding
+                        '            XVisualizationChart.ChartAreas(0).AxisY.Minimum = minAmplitude - 2 ' Add some padding
+
+
+                        '            If IsConnectedToXAxisCOM Then
+                        '                ' Send initial G-code commands
+                        '                XAxisSerialPort.WriteLine("$100 = 29.78")
+                        '                XAxisSerialPort.WriteLine("G90 G21 G94")
+
+                        '                ' Start BackgroundWorker to read file and write to serial port
+                        '                If Not bgWorkerX.IsBusy Then
+                        '                    bgWorkerX.RunWorkerAsync(filePath)
+                        '                End If
+                        '            Else
+                        '                MessageBox.Show("X axis COM port is not connected.")
+                        '            End If
+                        '        Else
+                        '            MessageBox.Show($"File {filePath} not found.")
+                        '        End If
+                        '    Else
+                        '        MessageBox.Show("Please select frequency and amplitude.")
+                        '    End If
+
                     ElseIf SimulationModeTabControl.SelectedTab Is SinusoidalSelectionTabPage Then
-                        ' Sinusoidal tab selected
-                        If SinusoidalSelectionDGV.SelectedRows.Count > 0 Then
-                            Dim frequency As String = SinusoidalSelectionDGV.SelectedRows(0).Cells(0).Value.ToString()
-                            Dim amplitude As String = SinusoidalSelectionDGV.SelectedRows(0).Cells(1).Value.ToString()
-                            Dim filePath As String = $"C:\Earthquakes\Frequencies\{frequency} {amplitude}.txt"
-                            XVisualizationChart.Series.Clear()
-                            YVisualizationChart.Series.Clear()
 
-                            If File.Exists(filePath) Then
-                                Dim xValues = ReadAndDisplayXData(filePath)
-                                ' Assuming data is loaded into a list or array called "amplitudeData"
-                                Dim maxAmplitude As Double = xValues.Max()
-                                Dim minAmplitude As Double = xValues.Min()
+                        If FrequencyNumericUpDown.Value <> 0 And AmplitudeNumericUpDown.Value <> 0 And DurationNumericUpDown.Value <> 0 Then
 
-                                ' Update the chart's Y-axis
-                                XVisualizationChart.ChartAreas(0).AxisY.Maximum = maxAmplitude + 2 ' Add some padding
-                                XVisualizationChart.ChartAreas(0).AxisY.Minimum = minAmplitude - 2 ' Add some padding
+                            Dim GCodeList = GenerateSinusoidalGCode(FrequencyNumericUpDown.Value, AmplitudeNumericUpDown.Value, DurationNumericUpDown.Value)
 
+                            Dim xValues = ReadAndDisplayCustomXData(GCodeList)
 
-                                If IsConnectedToXAxisCOM Then
-                                    ' Send initial G-code commands
-                                    XAxisSerialPort.WriteLine("$100 = 29.78")
-                                    XAxisSerialPort.WriteLine("G90 G21 G94")
+                            ' Assuming data is loaded into a list or array called "amplitudeData"
+                            Dim maxAmplitude As Double = xValues.Max()
+                            Dim minAmplitude As Double = xValues.Min()
 
-                                    ' Start BackgroundWorker to read file and write to serial port
-                                    If Not bgWorkerX.IsBusy Then
-                                        bgWorkerX.RunWorkerAsync(filePath)
-                                    End If
-                                Else
-                                    MessageBox.Show("X axis COM port is not connected.")
+                            ' Update the chart's Y-axis
+                            XVisualizationChart.ChartAreas(0).AxisY.Maximum = maxAmplitude ' Add some padding
+                            XVisualizationChart.ChartAreas(0).AxisY.Minimum = minAmplitude ' Add some padding
+
+                            If IsConnectedToXAxisCOM Then
+                                ' Send initial G-code commands
+                                XAxisSerialPort.WriteLine("$100 = 29.78")
+                                XAxisSerialPort.WriteLine("G90 G21 G94")
+
+                                ' Start BackgroundWorker to read file and write to serial port
+                                If Not bgWorkerCustomX.IsBusy Then
+                                    bgWorkerCustomX.RunWorkerAsync(GCodeList)
                                 End If
                             Else
-                                MessageBox.Show($"File {filePath} not found.")
+                                MessageBox.Show("X axis COM port is not connected.")
                             End If
                         Else
-                            MessageBox.Show("Please select frequency and amplitude.")
+                            MessageBox.Show("Make sure to add values for the frequency, amplitude, and duration.")
                         End If
 
                     ElseIf SimulationModeTabControl.SelectedTab Is CustomFileTabPage Then
@@ -942,6 +974,38 @@ Public Class MainForm
         ' Optional: Set SizeMode to adjust image display style
         PictureBox1.SizeMode = PictureBoxSizeMode.Zoom
     End Sub
+
+    Function GenerateSinusoidalGCode(frequency As Double, amplitude As Double, duration As Double) As List(Of String)
+        Dim gcodeList As New List(Of String)
+        Dim timeStep As Double = 0.01 ' Time step for the wave in seconds
+        Dim x0 As Double = 200 ' Initial offset for displacement in mm
+        Dim time As Double = 0
+        Dim velocity As Double = 0 ' Initial velocity
+        Dim prevDisplacement As Double = 0 ' To store the previous displacement for velocity calculation
+
+        While time <= duration
+            ' Calculate displacement based on sinusoidal movement
+            Dim displacement As Double = amplitude * Math.Sin(2 * Math.PI * frequency * time)
+            ' Add the 200 mm offset to the displacement
+            Dim xPosition As Double = x0 + displacement
+
+            ' Calculate velocity in mm/s and convert to mm/min by multiplying by 60
+            If time > 0 Then
+                velocity = (displacement - prevDisplacement) / timeStep * 60
+            End If
+            prevDisplacement = displacement
+
+            ' Format the G-code line: G01 X{displacement} F{velocity}
+            Dim gcode As String = String.Format("G01X {0:F2} F{1:F2}", xPosition, Math.Abs(velocity))
+            gcodeList.Add(gcode)
+
+            ' Increment time by the time step
+            time += timeStep
+        End While
+
+        Return gcodeList
+    End Function
+
 
 #End Region
 
